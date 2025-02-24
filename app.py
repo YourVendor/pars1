@@ -1,4 +1,4 @@
-from src.main import start_parsing
+from src.interface import create_interface
 
 if __name__ == "__main__":
-    start_parsing()
+    create_interface()
