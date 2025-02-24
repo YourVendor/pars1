@@ -1,2 +1,2 @@
 # config.py
-PARSING_URL = "https://example.com"
+PARSING_URL = "https://www.informat.ru/catalog/ofisnye-tovary/pismennye-prinadlezhnosti/karandashi-chernografitnye-bez-lastika/karandash-chernografitnyy-lorekh-v-type-pastel-hb-zatochennyy-derevo-trekhgrannyy-bez-lastika_195105/"
