@@ -42,7 +42,7 @@ def start_parsing():
 
     # Проходим по каждой строке файла
     for index, row in df.iterrows():
-        identifier = row[0]  # Идентификатор из первой колонки
+        identifier = str(row[0])  # Идентификатор из первой колонки
         url = row[1]  # Ссылка из второй колонки
 
         if pd.isna(url) or not url.startswith("http"):
@@ -52,10 +52,10 @@ def start_parsing():
         print(f"Парсинг страницы: {url}")
 
         try:
-            # Запускаем main.py с передачей URL
+            # Запускаем main.py с передачей URL и идентификатора
             main_script_path = str(Path(__file__).resolve().parent / "main.py")
             result = subprocess.run(
-                ["python", main_script_path, url],
+                ["python", main_script_path, f'"{url}"', identifier],
                 capture_output=True,
                 text=True,
                 check=True
@@ -63,20 +63,31 @@ def start_parsing():
 
             # Обрабатываем вывод main.py
             output = result.stdout.strip().split("\n")
-            name = output[2].split(": ")[1] if len(output) > 0 else "N/A"
-            barcode = output[3].split(": ")[1] if len(output) > 1 else "N/A"
-            description = output[4].split(": ")[1] if len(output) > 2 else "N/A"
+            if len(output) < 3:  # Проверяем, что вывод содержит достаточно строк
+                print(f"Ошибка: некорректный вывод для {url}.")
+                results.append([identifier, url, "Ошибка", "Ошибка", "Ошибка"])
+                continue
+            if len(output) < 4:
+                print(f"Ошибка: некорректный вывод для {url}.")
+                results.append([identifier, url, "Ошибка", "Ошибка", "Ошибка"])
+                continue
+
+            # Извлекаем данные из вывода
+            name = output[2].split(": ")[1] if ": " in output[0] else "N/A"
+            barcode = output[3].split(": ")[1] if ": " in output[1] else "N/A"
+            description = output[4].split(": ")[1] if ": " in output[2] else "N/A"
 
             # Добавляем результат в список
             results.append([identifier, url, name, barcode, description])
 
-            # Случайная задержка между запросами (от 5 до 15 секунд)
-            delay = random.randint(4, 9)
+            # Случайная задержка между запросами (от 3 до 8 секунд)
+            delay = random.randint(3, 8)
             print(f"Ожидание {delay} секунд перед следующим запросом...")
             time.sleep(delay)
 
         except subprocess.CalledProcessError as e:
             print(f"Ошибка при парсинге {url}: {e}")
+            print(f"Вывод stderr: {e.stderr}")  # Выводим stderr для отладки
             results.append([identifier, url, "Ошибка", "Ошибка", "Ошибка"])
 
     # Сохраняем результаты в файл

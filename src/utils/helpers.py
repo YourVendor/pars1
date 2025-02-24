@@ -2,6 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import random
+import os
+from PIL import Image  # Для работы с изображениями
+from io import BytesIO  # Для загрузки изображений в память
 
 def fetch_page(url):
     """Загружает HTML-страницу по указанному URL, следуя за переадресацией."""
@@ -17,7 +20,7 @@ def fetch_page(url):
             "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
             "Accept-Encoding": "gzip, deflate, br",
             "Connection": "keep-alive",
-            "Referer": "https://www.informat.ru/",  # Добавляем Referer
+            "Referer": "https://www.informat.ru/",
             "Sec-Fetch-Dest": "document",
             "Sec-Fetch-Mode": "navigate",
             "Sec-Fetch-Site": "same-origin",
@@ -25,26 +28,18 @@ def fetch_page(url):
             "Upgrade-Insecure-Requests": "1",
         }
 
-        # Куки (если нужны)
-        cookies = {
-            "session_id": "1234567890abcdef",  # Пример куки
-        }
-
         # Выполняем запрос с автоматическим следованием за переадресацией
-        response = requests.get(
-            url,
-            headers=headers,
-            cookies=cookies,
-            timeout=10,
-            allow_redirects=True
-        )
+        response = requests.get(url, headers=headers, timeout=10, allow_redirects=True)
         response.raise_for_status()  # Проверяем статус ответа
 
         # Возвращаем финальный URL и HTML
         print(f"Финальный URL после переадресации: {response.url}")
         return response.text
+    except requests.exceptions.HTTPError as e:
+        print(f"Ошибка HTTP при загрузке страницы {url}: {e}")
+        return None
     except requests.exceptions.RequestException as e:
-        print(f"Ошибка при загрузке страницы: {e}")
+        print(f"Ошибка при загрузке страницы {url}: {e}")
         return None
 
 def parse_page(html):
@@ -77,8 +72,76 @@ def extract_product_info(soup):
     # Извлекаем описание
     description_tag = soup.find('div', id='tab1', itemprop='description')
     if description_tag:
-        product_info['description'] = description_tag.text.strip()
+        # Убираем все HTML-теги из описания
+        description_text = description_tag.get_text(separator=" ", strip=True)
+        product_info['description'] = description_text
     else:
         product_info['description'] = "N/A"
 
     return product_info
+
+def download_images(soup, identifier, base_path):
+    """Скачивает изображения и сохраняет их в указанную папку, игнорируя слишком маленькие."""
+    # Базовый URL сайта
+    base_url = "https://www.informat.ru"
+
+    # Находим контейнер с изображениями
+    image_container = soup.find('div', class_='item-slider-holder')
+    if not image_container:
+        print("Контейнер с изображениями не найден.")
+        return []
+
+    # Находим все изображения внутри контейнера
+    images = image_container.find_all('img')
+    if not images:
+        print("Изображения не найдены.")
+        return []
+
+    # Создаём папку для сохранения изображений, если её нет
+    os.makedirs(base_path, exist_ok=True)
+
+    saved_images = []
+    for i, img in enumerate(images):
+        # Получаем URL изображения
+        img_url = img.get('src')
+        if not img_url:
+            continue
+
+        # Если URL относительный, добавляем базовый URL
+        if img_url.startswith('/'):
+            img_url = base_url + img_url
+
+        # Скачиваем изображение для проверки размера
+        try:
+            response = requests.get(img_url, stream=True)
+            response.raise_for_status()
+
+            # Загружаем изображение в память
+            img_data = BytesIO(response.content)
+            img_pil = Image.open(img_data)
+
+            # Проверяем размер изображения
+            width, height = img_pil.size
+            if width < 110 or height < 110:  # Игнорируем изображения меньше 110x110 пикселей
+                print(f"Изображение {img_url} слишком маленькое ({width}x{height}), пропускаем.")
+                continue
+
+            # Формируем имя файла
+            if i == 0:
+                filename = f"{identifier}.jpg"
+            else:
+                filename = f"{identifier}a.jpg"
+
+            # Полный путь для сохранения
+            file_path = os.path.join(base_path, filename)
+
+            # Сохраняем изображение
+            with open(file_path, 'wb') as file:
+                file.write(response.content)
+            print(f"Изображение сохранено: {file_path} ({width}x{height})")
+            saved_images.append(file_path)
+
+        except Exception as e:
+            print(f"Ошибка при скачивании изображения {img_url}: {e}")
+
+    return saved_images
