@@ -1,110 +1,125 @@
 import tkinter as tk
-from tkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox, scrolledtext
 import pandas as pd
-import subprocess
-from pathlib import Path
+from src.utils.helpers import fetch_page, parse_page, extract_product_info, download_images
+import json
 import time
 import random
+from pathlib import Path
+
+def log_message(log_widget, message):
+    """Логирует сообщение в текстовое поле с временной меткой."""
+    log_widget.insert(tk.END, f"[{time.strftime('%H:%M:%S')}] {message}\n")
+    log_widget.see(tk.END)
 
 def load_file():
-    """Загружает XLSX-файл и выводит его содержимое."""
+    """Загружает XLSX-файл."""
     file_path = filedialog.askopenfilename(
         title="Выберите файл",
         filetypes=(("Excel files", "*.xlsx"), ("All files", "*.*"))
     )
     if file_path:
         try:
-            # Читаем файл
             df = pd.read_excel(file_path)
-            print("Загруженные данные:")
-            print(df)
             return df
         except Exception as e:
-            print(f"Ошибка при загрузке файла: {e}")
             return None
     return None
 
-def start_parsing():
-    """Запускает парсинг для всех ссылок из загруженного файла."""
-    # Загружаем файл
+def configure_tags():
+    """Открывает окно для настройки тегов (до 30 полей)."""
+    config_win = tk.Toplevel()
+    config_win.title("Настройка тегов (макс. 30)")
+    config_win.geometry("600x400")
+
+    # Поля ввода
+    tk.Label(config_win, text="Тег").grid(row=0, column=0, padx=5, pady=5)
+    tk.Label(config_win, text="Атрибут (например, itemprop=name)").grid(row=0, column=1, padx=5, pady=5)
+    tk.Label(config_win, text="Роль (имя поля)").grid(row=0, column=2, padx=5, pady=5)
+
+    tags = []
+    for i in range(30):
+        tag_entry = tk.Entry(config_win, width=15)
+        attr_entry = tk.Entry(config_win, width=20)
+        role_entry = tk.Entry(config_win, width=15)
+        tag_entry.grid(row=i+1, column=0, padx=5, pady=2)
+        attr_entry.grid(row=i+1, column=1, padx=5, pady=2)
+        role_entry.grid(row=i+1, column=2, padx=5, pady=2)
+        tags.append((tag_entry, attr_entry, role_entry))
+
+    def save_config():
+        config = [(t.get(), a.get(), r.get()) for t, a, r in tags if t.get() and r.get()]
+        if config:
+            with open("config.json", "w") as f:
+                json.dump(config, f)
+        config_win.destroy()
+
+    tk.Button(config_win, text="Сохранить", command=save_config).grid(row=31, column=0, columnspan=3, pady=10)
+    config_win.wait_window()
+
+    return json.load(open("config.json")) if Path("config.json").exists() else [
+        ("h1", "itemprop=name", "name"),
+        ("dt", "text=Штрихкод:", "barcode"),
+        ("div", "id=tab1", "description")
+    ]
+
+def start_parsing(log_widget):
+    """Запускает парсинг для всех ссылок из файла."""
     df = load_file()
     if df is None or df.empty:
+        log_message(log_widget, "Файл не загружен или пуст.")
         messagebox.showerror("Ошибка", "Файл не загружен или пуст.")
         return
-
-    # Проверяем, что файл содержит нужные колонки
     if len(df.columns) < 2:
-        messagebox.showerror("Ошибка", "Файл должен содержать как минимум 2 колонки: идентификатор и ссылка.")
+        log_message(log_widget, "Файл должен содержать как минимум 2 колонки: ID и URL.")
+        messagebox.showerror("Ошибка", "Файл должен содержать как минимум 2 колонки.")
         return
 
-    # Создаём список для хранения результатов
+    config = configure_tags()
     results = []
+    base_path = str(Path(__file__).resolve().parent.parent)
 
-    # Проходим по каждой строке файла
     for index, row in df.iterrows():
-        identifier = str(row[0])  # Идентификатор из первой колонки
-        url = row[1]  # Ссылка из второй колонки
-
+        identifier, url = str(row[0]), row[1]
         if pd.isna(url) or not url.startswith("http"):
-            print(f"Пропуск строки {index + 1}: некорректная ссылка.")
+            log_message(log_widget, f"Пропуск строки {index + 1}: некорректная ссылка.")
             continue
 
-        print(f"Парсинг страницы: {url}")
+        log_message(log_widget, f"Парсинг страницы: {url}")
+        html = fetch_page(url)
+        if not html:
+            log_message(log_widget, f"Не удалось загрузить страницу: {url}")
+            results.append([identifier, url] + ["Ошибка"] * len(config))
+            continue
 
-        try:
-            # Запускаем main.py с передачей URL и идентификатора
-            main_script_path = str(Path(__file__).resolve().parent / "main.py")
-            result = subprocess.run(
-                ["python", main_script_path, f'"{url}"', identifier],
-                capture_output=True,
-                text=True,
-                check=True
-            )
+        soup = parse_page(html)
+        product_info = extract_product_info(soup, config)
+        images = download_images(soup, identifier, base_path)
 
-            # Обрабатываем вывод main.py
-            output = result.stdout.strip().split("\n")
-            if len(output) < 3:  # Проверяем, что вывод содержит достаточно строк
-                print(f"Ошибка: некорректный вывод для {url}.")
-                results.append([identifier, url, "Ошибка", "Ошибка", "Ошибка"])
-                continue
-            if len(output) < 4:
-                print(f"Ошибка: некорректный вывод для {url}.")
-                results.append([identifier, url, "Ошибка", "Ошибка", "Ошибка"])
-                continue
+        log_message(log_widget, f"Извлечено: {json.dumps(product_info, ensure_ascii=False)}")
+        log_message(log_widget, f"Скачаны изображения: {images}")
+        results.append([identifier, url] + [product_info.get(role, "N/A") for _, _, role in config])
 
-            # Извлекаем данные из вывода
-            name = output[2].split(": ")[1] if ": " in output[0] else "N/A"
-            barcode = output[3].split(": ")[1] if ": " in output[1] else "N/A"
-            description = output[4].split(": ")[1] if ": " in output[2] else "N/A"
+        delay = random.randint(3, 8)
+        log_message(log_widget, f"Ожидание {delay} секунд...")
+        time.sleep(delay)
 
-            # Добавляем результат в список
-            results.append([identifier, url, name, barcode, description])
-
-            # Случайная задержка между запросами (от 3 до 8 секунд)
-            delay = random.randint(3, 8)
-            print(f"Ожидание {delay} секунд перед следующим запросом...")
-            time.sleep(delay)
-
-        except subprocess.CalledProcessError as e:
-            print(f"Ошибка при парсинге {url}: {e}")
-            print(f"Вывод stderr: {e.stderr}")  # Выводим stderr для отладки
-            results.append([identifier, url, "Ошибка", "Ошибка", "Ошибка"])
-
-    # Сохраняем результаты в файл
-    output_df = pd.DataFrame(results, columns=["Идентификатор", "Ссылка", "Наименование", "Штрихкод", "Описание"])
-    output_path = str(Path(__file__).resolve().parent.parent / "Готовый парс.xlsx")
+    output_df = pd.DataFrame(results, columns=["Идентификатор", "Ссылка"] + [role for _, _, role in config])
+    output_path = base_path + "/Готовый парс.xlsx"
     output_df.to_excel(output_path, index=False)
-    print(f"Результаты сохранены в {output_path}")
-    messagebox.showinfo("Готово", f"Парсинг завершён. Результаты сохранены в {output_path}")
+    log_message(log_widget, f"Результаты сохранены в {output_path}")
+    messagebox.showinfo("Готово", f"Парсинг завершён. Результаты в {output_path}")
 
 def create_interface():
     """Создаёт графический интерфейс."""
     root = tk.Tk()
     root.title("Парсер")
+    root.geometry("800x600")
 
-    # Кнопка для запуска парсера
-    parse_button = tk.Button(root, text="ПАРС", command=start_parsing)
-    parse_button.pack(pady=10)
+    log_widget = scrolledtext.ScrolledText(root, width=90, height=30)
+    log_widget.pack(pady=10)
+
+    tk.Button(root, text="ПАРС", command=lambda: start_parsing(log_widget)).pack(pady=10)
 
     root.mainloop()
 
