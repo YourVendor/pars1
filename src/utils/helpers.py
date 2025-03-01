@@ -15,10 +15,10 @@ def fetch_page(url):
         "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
         "Accept-Encoding": "gzip, deflate, br",
         "Connection": "keep-alive",
-        "Referer": "https://www.informat.ru/",
+        "Referer": "https://www.google.com/",
         "Sec-Fetch-Dest": "document",
         "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "same-origin",
+        "Sec-Fetch-Site": "cross-site",
         "Sec-Fetch-User": "?1",
         "Upgrade-Insecure-Requests": "1",
     }
@@ -44,7 +44,7 @@ def extract_product_info(soup, config):
                 if attr_key == "text":
                     tag_elem = soup.find(tag, text=attr_value)
                     if tag_elem:
-                        for sib in sibling.split(","):  # Поддержка нескольких тегов через запятую
+                        for sib in sibling.split(","):
                             next_elem = tag_elem.find_next_sibling(sib.strip())
                             if next_elem:
                                 product_info[role] = next_elem.get_text(separator=" ", strip=True)
@@ -63,20 +63,27 @@ def extract_product_info(soup, config):
             product_info[role] = f"Ошибка: {e}"
     return product_info
 
-def download_images(soup, identifier, base_path):
+def download_images(soup, identifier, base_url, output_folder, image_container):
     if not soup:
         return []
 
-    base_url = "https://www.informat.ru"  # Пока оставим, до следующей итерации
-    image_container = soup.find('div', class_='item-slider-holder')
-    if not image_container:
+    try:
+        tag, attr_str = image_container.split(",", 1)
+        attr_key, attr_value = attr_str.split("=", 1)
+        container_attrs = {attr_key.strip(): attr_value.strip()}
+    except ValueError:
+        tag = image_container
+        container_attrs = {}
+
+    image_container_elem = soup.find(tag, **container_attrs)
+    if not image_container_elem:
         return []
 
-    images = image_container.find_all('img')
+    images = image_container_elem.find_all('img')
     if not images:
         return []
 
-    os.makedirs(base_path, exist_ok=True)
+    os.makedirs(output_folder, exist_ok=True)
     saved_images = []
     main_image_set = False
 
@@ -85,7 +92,7 @@ def download_images(soup, identifier, base_path):
         if not img_url:
             continue
         if img_url.startswith('/'):
-            img_url = base_url + img_url
+            img_url = base_url.rstrip('/') + img_url
 
         try:
             response = requests.get(img_url, stream=True)
@@ -103,7 +110,7 @@ def download_images(soup, identifier, base_path):
             else:
                 filename = f"{identifier}a.jpg"
             
-            file_path = os.path.join(base_path, filename)
+            file_path = os.path.join(output_folder, filename)
             with open(file_path, 'wb') as file:
                 file.write(response.content)
             saved_images.append(file_path)

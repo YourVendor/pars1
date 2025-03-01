@@ -8,6 +8,7 @@ import random
 from pathlib import Path
 import threading
 import queue
+import os  # Убедимся, что импорт тут
 
 def log_message(log_widget, message):
     log_widget.insert(tk.END, f"[{time.strftime('%H:%M:%S')}] {message}\n")
@@ -29,7 +30,7 @@ def load_file():
 def configure_tags():
     config_win = tk.Toplevel()
     config_win.title("Настройка тегов (макс. 30)")
-    config_win.geometry("700x400")
+    config_win.geometry("700x450")
 
     tk.Label(config_win, text="Тег").grid(row=0, column=0, padx=5, pady=5)
     tk.Label(config_win, text="Атрибут").grid(row=0, column=1, padx=5, pady=5)
@@ -48,11 +49,17 @@ def configure_tags():
         sibling_entry.grid(row=i+1, column=3, padx=5, pady=2)
         tags.append((tag_entry, attr_entry, role_entry, sibling_entry))
 
+    tk.Label(config_win, text="Контейнер картинок (тег, класс)").grid(row=31, column=0, columnspan=2, padx=5, pady=5)
+    image_container_entry = tk.Entry(config_win, width=35)
+    image_container_entry.grid(row=31, column=2, columnspan=2, padx=5, pady=5)
+    image_container_entry.insert(0, "div, class_=item-slider-holder")
+
     def save_config():
         config = [(t.get(), a.get(), r.get(), s.get() or "dd") for t, a, r, s in tags if t.get() and r.get()]
+        image_container = image_container_entry.get()
         if config:
             with open("config.json", "w") as f:
-                json.dump(config, f)
+                json.dump({"tags": config, "image_container": image_container}, f)
         config_win.destroy()
 
     def load_config_from_file():
@@ -83,18 +90,30 @@ def configure_tags():
             except Exception as e:
                 messagebox.showerror("Ошибка", f"Не удалось загрузить файл: {e}")
 
-    tk.Button(config_win, text="Сохранить", command=save_config).grid(row=31, column=0, padx=5, pady=10)
-    tk.Button(config_win, text="Загрузить из файла", command=load_config_from_file).grid(row=31, column=1, padx=5, pady=10)
+    tk.Button(config_win, text="Сохранить", command=save_config).grid(row=32, column=0, padx=5, pady=10)
+    tk.Button(config_win, text="Загрузить из файла", command=load_config_from_file).grid(row=32, column=1, padx=5, pady=10)
 
     config_win.wait_window()
 
-    return json.load(open("config.json")) if Path("config.json").exists() else [
-        ("h1", "itemprop=name", "name", "dd"),
-        ("dt", "text=Штрихкод:", "barcode", "dd"),
-        ("div", "id=tab1", "description", "dd")
-    ]
+    default_config = {
+        "tags": [
+            ("h1", "itemprop=name", "name", "dd"),
+            ("dt", "text=Штрихкод:", "barcode", "dd"),
+            ("div", "id=tab1", "description", "dd")
+        ],
+        "image_container": "div, class_=item-slider-holder"
+    }
+    if Path("config.json").exists():
+        with open("config.json", "r") as f:
+            config_data = json.load(f)
+            return config_data["tags"], config_data.get("image_container", default_config["image_container"])
+    return default_config["tags"], default_config["image_container"]
 
-def parse_url(identifier, url, config, base_path, result_queue, log_widget):
+def select_output_folder():
+    folder = filedialog.askdirectory(title="Выберите папку для сохранения результатов")
+    return folder if folder else None
+
+def parse_url(identifier, url, config, image_container, base_url, output_folder, result_queue, log_widget):
     log_message(log_widget, f"Парсинг страницы: {url}")
     html = fetch_page(url)
     if not html:
@@ -104,7 +123,7 @@ def parse_url(identifier, url, config, base_path, result_queue, log_widget):
 
     soup = parse_page(html)
     product_info = extract_product_info(soup, config)
-    images = download_images(soup, identifier, base_path)
+    images = download_images(soup, identifier, base_url, output_folder, image_container)
 
     log_message(log_widget, f"Извлечено: {json.dumps(product_info, ensure_ascii=False)}")
     log_message(log_widget, f"Скачаны изображения: {images}")
@@ -116,35 +135,41 @@ def start_parsing(log_widget, progress_bar, root):
         log_message(log_widget, "Файл не загружен или пуст.")
         messagebox.showerror("Ошибка", "Файл не загружен или пуст.")
         return
-    if len(df.columns) < 2:
-        log_message(log_widget, "Файл должен содержать как минимум 2 колонки.")
-        messagebox.showerror("Ошибка", "Файл должен содержать как минимум 2 колонки.")
+    if len(df.columns) < 3:
+        log_message(log_widget, "Файл должен содержать как минимум 3 колонки: ID, URL, Base URL.")
+        messagebox.showerror("Ошибка", "Файл должен содержать как минимум 3 колонки.")
         return
 
-    config = configure_tags()
+    output_folder = select_output_folder()
+    if not output_folder:
+        log_message(log_widget, "Папка для сохранения не выбрана.")
+        messagebox.showerror("Ошибка", "Папка для сохранения не выбрана.")
+        return
+
+    config, image_container = configure_tags()
     result_queue = queue.Queue()
-    base_path = str(Path(__file__).resolve().parent.parent)
     threads = []
     total_urls = len([row for _, row in df.iterrows() if not pd.isna(row.iloc[1]) and row.iloc[1].startswith("http")])
     completed = 0
 
     for index, row in df.iterrows():
-        identifier, url = str(row.iloc[0]), row.iloc[1]
+        identifier, url, base_url = str(row.iloc[0]), row.iloc[1], row.iloc[2]
         if pd.isna(url) or not url.startswith("http"):
             log_message(log_widget, f"Пропуск строки {index + 1}: некорректная ссылка.")
             continue
+        if pd.isna(base_url) or not base_url.startswith("http"):
+            log_message(log_widget, f"Пропуск строки {index + 1}: некорректный Base URL.")
+            continue
 
-        thread = threading.Thread(target=parse_url, args=(identifier, url, config, base_path, result_queue, log_widget))
+        thread = threading.Thread(target=parse_url, args=(identifier, url, config, image_container, base_url, output_folder, result_queue, log_widget))
         threads.append(thread)
         thread.start()
 
     def update_progress():
         nonlocal completed
-        # Ждём завершения всех потоков
         for thread in threads:
             thread.join()
 
-        # Собираем результаты
         results = []
         while not result_queue.empty():
             results.append(result_queue.get())
@@ -152,9 +177,8 @@ def start_parsing(log_widget, progress_bar, root):
             progress_bar['value'] = (completed / total_urls) * 100
             root.update_idletasks()
 
-        # Записываем файл
         output_df = pd.DataFrame(results, columns=["Идентификатор", "Ссылка"] + [role for _, _, role, _ in config])
-        output_path = base_path + "/Готовый парс.xlsx"
+        output_path = os.path.join(output_folder, "Готовый парс.xlsx")
         output_df.to_excel(output_path, index=False)
         log_message(log_widget, f"Результаты сохранены в {output_path}")
         messagebox.showinfo("Готово", f"Парсинг завершён. Результаты в {output_path}")
