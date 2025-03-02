@@ -1,6 +1,0 @@
-Переназвать "Выберите файл" в "Выберите файл содержащий ID	URL	Base URL"
-
-def load_file():
-    file_path = filedialog.askopenfilename(
-        title="Выберите файл",
-        filetypes=(("Excel files", "*.xlsx"), ("All files", "*.*"))

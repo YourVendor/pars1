@@ -49,15 +49,10 @@ def configure_tags():
         role_entry.grid(row=i+1, column=2, padx=5, pady=2)
         tags.append((tag_entry, attr_entry, role_entry))
 
-    tk.Label(config_win, text="Контейнер картинок (тег, класс)").grid(row=31, column=0, columnspan=2, padx=5, pady=5)
-    image_container_entry = tk.Entry(config_win, width=35)
-    image_container_entry.grid(row=31, column=2, columnspan=2, padx=5, pady=5)
-    image_container_entry.insert(0, "div, class_=item-slider-holder")
-
     def save_config():
         config = [(t.get(), a.get(), r.get(), s.get() or "dd") for t, a, r, s in tags if t.get() and r.get()]
         if config:
-            with open("parse_config.json", "w") as f:
+            with open("config.json", "w") as f:
                 json.dump({"tags": config, "image_container": image_container}, f)
         config_win.destroy()
 

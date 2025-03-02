@@ -16,10 +16,10 @@ def fetch_page(url):
         "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
         "Accept-Encoding": "gzip, deflate, br",
         "Connection": "keep-alive",
-        "Referer": "https://www.google.com/",
+        "Referer": "https://www.informat.ru/",
         "Sec-Fetch-Dest": "document",
         "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "cross-site",
+        "Sec-Fetch-Site": "same-origin",
         "Sec-Fetch-User": "?1",
         "Upgrade-Insecure-Requests": "1",
     }
@@ -79,11 +79,11 @@ def download_images(soup, identifier, base_path):
     if not image_container:
         return []
 
-    images = image_container_elem.find_all('img')
+    images = image_container.find_all('img')
     if not images:
         return []
 
-    os.makedirs(output_folder, exist_ok=True)
+    os.makedirs(base_path, exist_ok=True)
     saved_images = []
     main_image_set = False
 
@@ -92,7 +92,7 @@ def download_images(soup, identifier, base_path):
         if not img_url:
             continue
         if img_url.startswith('/'):
-            img_url = base_url.rstrip('/') + img_url
+            img_url = base_url + img_url
 
         try:
             response = requests.get(img_url, stream=True)
@@ -111,7 +111,7 @@ def download_images(soup, identifier, base_path):
             else:
                 filename = f"{identifier}a.jpg"
             
-            file_path = os.path.join(output_folder, filename)
+            file_path = os.path.join(base_path, filename)
             with open(file_path, 'wb') as file:
                 file.write(response.content)
             saved_images.append(file_path)
