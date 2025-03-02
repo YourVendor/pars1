@@ -16,7 +16,7 @@ def log_message(log_widget, message):
 
 def load_file():
     file_path = filedialog.askopenfilename(
-        title="Выберите файл",
+        title="Выберите файл содержащий Тег, Атрибут, Роль, Тег для поиска",
         filetypes=(("Excel files", "*.xlsx"), ("All files", "*.*"))
     )
     if file_path:
@@ -35,7 +35,7 @@ def configure_tags():
     tk.Label(config_win, text="Тег").grid(row=0, column=0, padx=5, pady=5)
     tk.Label(config_win, text="Атрибут").grid(row=0, column=1, padx=5, pady=5)
     tk.Label(config_win, text="Роль").grid(row=0, column=2, padx=5, pady=5)
-    tk.Label(config_win, text="Тег для поиска").grid(row=0, column=3, padx=5, pady=5)
+    tk.Label(config_win, text="Тег для поиска (Идущий следующим)").grid(row=0, column=3, padx=5, pady=5)
 
     tags = []
     for i in range(30):
