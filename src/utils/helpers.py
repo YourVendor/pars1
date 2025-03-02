@@ -7,27 +7,34 @@ from PIL import Image
 from io import BytesIO
 
 def fetch_page(url):
-    """Загружает HTML-страницу по URL с переадресацией."""
     delay = random.uniform(1, 3)
     time.sleep(delay)
+    user_agents = [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36",
+        "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0",
+        "Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.1 Mobile/15E148 Safari/604.1",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0"
+    ]
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        "User-Agent": random.choice(user_agents),
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
         "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
         "Accept-Encoding": "gzip, deflate, br",
         "Connection": "keep-alive",
-        "Referer": "https://www.informat.ru/",
+        "Referer": "https://www.google.com/",
         "Sec-Fetch-Dest": "document",
         "Sec-Fetch-Mode": "navigate",
-        "Sec-Fetch-Site": "same-origin",
+        "Sec-Fetch-Site": "cross-site",
         "Sec-Fetch-User": "?1",
         "Upgrade-Insecure-Requests": "1",
     }
     try:
-        response = requests.get(url, headers=headers, timeout=10, allow_redirects=True)
+        response = requests.get(url, headers=headers, timeout=30, allow_redirects=True)  # Таймаут 30 секунд
         response.raise_for_status()
         return response.text
-    except requests.RequestException:
+    except requests.RequestException as e:
+        print(f"Ошибка загрузки {url}: {e}")
         return None
 
 def parse_page(html):

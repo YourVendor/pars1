@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import filedialog, messagebox, scrolledtext
+from tkinter import filedialog, messagebox, scrolledtext, ttk
 import pandas as pd
 from src.utils.helpers import fetch_page, parse_page, extract_product_info, download_images
 import json
@@ -8,6 +8,7 @@ import random
 from pathlib import Path
 import threading
 import queue
+import os  # Убедимся, что импорт тут
 
 def log_message(log_widget, message):
     """Логирует сообщение в текстовое поле с временной меткой."""
@@ -17,7 +18,7 @@ def log_message(log_widget, message):
 def load_file():
     """Загружает XLSX-файл."""
     file_path = filedialog.askopenfilename(
-        title="Выберите файл (pred_data.xlsx)",
+        title="Выберите файл",
         filetypes=(("Excel files", "*.xlsx"), ("All files", "*.*"))
     )
     if file_path:
@@ -29,25 +30,31 @@ def load_file():
     return None
 
 def configure_tags():
-    """Открывает окно для настройки тегов (до 30 полей)."""
     config_win = tk.Toplevel()
     config_win.title("Настройка тегов (макс. 30)")
-    config_win.geometry("700x400")
+    config_win.geometry("700x450")
 
-    # Поля ввода
     tk.Label(config_win, text="Тег").grid(row=0, column=0, padx=5, pady=5)
-    tk.Label(config_win, text="Атрибут (например, itemprop=name)").grid(row=0, column=1, padx=5, pady=5)
-    tk.Label(config_win, text="Роль (имя поля)").grid(row=0, column=2, padx=5, pady=5)
+    tk.Label(config_win, text="Атрибут").grid(row=0, column=1, padx=5, pady=5)
+    tk.Label(config_win, text="Роль").grid(row=0, column=2, padx=5, pady=5)
+    tk.Label(config_win, text="Тег для поиска").grid(row=0, column=3, padx=5, pady=5)
 
     tags = []
     for i in range(30):
         tag_entry = tk.Entry(config_win, width=15)
         attr_entry = tk.Entry(config_win, width=20)
         role_entry = tk.Entry(config_win, width=15)
+        sibling_entry = tk.Entry(config_win, width=15)
         tag_entry.grid(row=i+1, column=0, padx=5, pady=2)
         attr_entry.grid(row=i+1, column=1, padx=5, pady=2)
         role_entry.grid(row=i+1, column=2, padx=5, pady=2)
-        tags.append((tag_entry, attr_entry, role_entry))
+        sibling_entry.grid(row=i+1, column=3, padx=5, pady=2)
+        tags.append((tag_entry, attr_entry, role_entry, sibling_entry))
+
+    tk.Label(config_win, text="Контейнер картинок (тег, класс)").grid(row=31, column=0, columnspan=2, padx=5, pady=5)
+    image_container_entry = tk.Entry(config_win, width=35)
+    image_container_entry.grid(row=31, column=2, columnspan=2, padx=5, pady=5)
+    image_container_entry.insert(0, "div, class_=item-slider-holder")
 
     def save_config():
         config = [(t.get(), a.get(), r.get(), s.get() or "dd") for t, a, r, s in tags if t.get() and r.get()]
@@ -84,22 +91,39 @@ def configure_tags():
             except Exception as e:
                 messagebox.showerror("Ошибка", f"Не удалось загрузить файл: {e}")
 
-    tk.Button(config_win, text="Сохранить", command=save_config).grid(row=31, column=0, padx=5, pady=10)
-    tk.Button(config_win, text="Загрузить из файла", command=load_config_from_file).grid(row=31, column=1, padx=5, pady=10)
+    tk.Button(config_win, text="Сохранить", command=save_config).grid(row=32, column=0, padx=5, pady=10)
+    tk.Button(config_win, text="Загрузить из файла", command=load_config_from_file).grid(row=32, column=1, padx=5, pady=10)
 
     config_win.wait_window()
 
-    return json.load(open("config.json")) if Path("config.json").exists() else [
-        ("h1", "itemprop=name", "name", "dd"),
-        ("dt", "text=Штрихкод:", "barcode", "dd"),
-        ("div", "id=tab1", "description", "dd")
-    ]
+    default_config = {
+        "tags": [
+            ("h1", "itemprop=name", "name", "dd"),
+            ("dt", "text=Штрихкод:", "barcode", "dd"),
+            ("div", "id=tab1", "description", "dd")
+        ],
+        "image_container": "div, class_=item-slider-holder"
+    }
+    if Path("config.json").exists():
+        with open("config.json", "r") as f:
+            config_data = json.load(f)
+            return config_data["tags"], config_data.get("image_container", default_config["image_container"])
+    return default_config["tags"], default_config["image_container"]
 
-def parse_url(identifier, url, config, base_path, result_queue, log_widget):
+def select_output_folder():
+    folder = filedialog.askdirectory(title="Выберите папку для сохранения результатов")
+    return folder if folder else None
+
+def parse_url(identifier, url, config, image_container, base_url, output_folder, result_queue, log_widget):
     log_message(log_widget, f"Парсинг страницы: {url}")
-    html = fetch_page(url)
-    if not html:
-        log_message(log_widget, f"Не удалось загрузить страницу: {url}")
+    for attempt in range(3):
+        html = fetch_page(url)
+        if html:
+            break
+        log_message(log_widget, f"Попытка {attempt + 1} не удалась для {url}")
+        time.sleep(5)
+    else:
+        log_message(log_widget, f"Не удалось загрузить страницу после 3 попыток: {url}")
         result_queue.put([identifier, url] + ["Ошибка"] * len(config))
         return
 
@@ -143,19 +167,28 @@ def start_parsing(log_widget, progress_bar, root):
         nonlocal completed
         # Ждём завершения всех потоков
         for thread in threads:
-            thread.join()
+            thread.join(timeout=60)
+            if thread.is_alive():
+                log_message(log_widget, f"Поток для одной из страниц завис и был пропущен")
 
         # Собираем результаты
         results = []
         while not result_queue.empty():
-            results.append(result_queue.get())
-            completed += 1
-            progress_bar['value'] = (completed / total_urls) * 100
-            root.update_idletasks()
+            try:
+                result = result_queue.get_nowait()
+                results.append(result)
+                completed += 1
+                progress_bar['value'] = (completed / total_urls) * 100
+                root.update_idletasks()
+                def poem_caller():
+                    show_poem(root, completed, total_urls)
+                root.after(0, poem_caller)
+            except queue.Empty:
+                break
 
         # Записываем файл
         output_df = pd.DataFrame(results, columns=["Идентификатор", "Ссылка"] + [role for _, _, role, _ in config])
-        output_path = base_path + "/Готовый парс.xlsx"
+        output_path = os.path.join(output_folder, "Готовый парс.xlsx")
         output_df.to_excel(output_path, index=False)
         log_message(log_widget, f"Результаты сохранены в {output_path}")
         messagebox.showinfo("Готово", f"Парсинг завершён. Результаты в {output_path}")
@@ -165,7 +198,9 @@ def create_interface():
     root = tk.Tk()
     root.title("Парсер")
     root.geometry("800x600")
+    root.iconbitmap("parser.ico")
 
+    global log_widget  # Делаем log_widget глобальным для доступа внутри show_poem
     log_widget = scrolledtext.ScrolledText(root, width=90, height=25)
     log_widget.pack(pady=10)
 
