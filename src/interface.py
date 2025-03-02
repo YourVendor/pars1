@@ -1,3 +1,4 @@
+# src/interface.py
 import tkinter as tk
 from tkinter import filedialog, messagebox, scrolledtext, ttk, Toplevel, Label, Canvas
 import pandas as pd
@@ -10,6 +11,13 @@ import threading
 import queue
 import os
 import webbrowser
+import sys
+
+def resource_path(relative_path):
+    """Возвращает путь к ресурсу в сборке или исходной папке"""
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.dirname(__file__), relative_path)
 
 def log_message(log_widget, message):
     log_widget.insert(tk.END, f"[{time.strftime('%H:%M:%S')}] {message}\n")
@@ -32,7 +40,7 @@ def configure_tags():
     config_win = Toplevel()
     config_win.title("Настройка тегов (макс. 30)")
     config_win.geometry("700x450")
-    config_win.iconbitmap("parser.ico")  # Добавляем иконку
+    config_win.iconbitmap(resource_path("parser.ico"))
 
     canvas = Canvas(config_win)
     scrollbar = ttk.Scrollbar(config_win, orient="vertical", command=canvas.yview)
@@ -80,7 +88,7 @@ def configure_tags():
 
     def load_config_from_file():
         file_path = filedialog.askopenfilename(
-            title="Выберите файл с настройками",
+            title="Выберите файл с настройками: Тег, Атрибут, Роль, Тег для поиска",
             filetypes=(("Excel files", "*.xlsx"), ("All files", "*.*"))
         )
         if file_path:
@@ -129,7 +137,7 @@ def select_output_folder():
     return folder if folder else None
 
 def load_poems():
-    poems_file = "poems.txt"
+    poems_file = resource_path("poems.txt")
     poems = []
     if os.path.exists(poems_file):
         try:
@@ -162,7 +170,7 @@ def show_poem(root, completed, total_urls):
     poem_win.geometry("400x300")
     poem_win.transient(root)
     poem_win.grab_set()
-    poem_win.iconbitmap("parser.ico")  # Добавляем иконку
+    poem_win.iconbitmap(resource_path("parser.ico"))
 
     title, poem = random.choice(poems)
     tk.Label(poem_win, text=title, font=("Arial", 14, "bold")).pack(pady=5)
@@ -179,7 +187,6 @@ def show_poem(root, completed, total_urls):
 
     link_frame = tk.Frame(poem_win)
     link_frame.pack(pady=5)
-    # Убрали иконку рядом с гиперссылкой
     link_label = tk.Label(link_frame, text="Познакомиться с Наблюдателем", font=("Arial", 10, "underline"), fg="blue", cursor="hand2")
     link_label.pack()
     link_label.bind("<Button-1>", lambda e: webbrowser.open("https://t.me/watcher_of_universe"))
@@ -281,21 +288,26 @@ def start_parsing(log_widget, progress_bar, root):
     threading.Thread(target=update_progress, daemon=True).start()
 
 def create_interface():
-    root = tk.Tk()
-    root.title("Парсер")
-    root.geometry("800x600")
-    root.iconbitmap("parser.ico")
+    try:
+        root = tk.Tk()
+        root.title("Парсер от VI")
+        root.geometry("800x600")
+        root.iconbitmap(resource_path("parser.ico"))
 
-    global log_widget  # Делаем log_widget глобальным для доступа внутри show_poem
-    log_widget = scrolledtext.ScrolledText(root, width=90, height=25)
-    log_widget.pack(pady=10)
+        global log_widget
+        log_widget = scrolledtext.ScrolledText(root, width=90, height=25)
+        log_widget.pack(pady=10)
 
-    progress_bar = ttk.Progressbar(root, length=400, mode='determinate')
-    progress_bar.pack(pady=10)
+        progress_bar = ttk.Progressbar(root, length=400, mode='determinate')
+        progress_bar.pack(pady=10)
 
-    tk.Button(root, text="ПАРС", command=lambda: start_parsing(log_widget, progress_bar, root)).pack(pady=10)
+        tk.Button(root, text="Выберите файл: ID, URL, базовый URL", command=lambda: start_parsing(log_widget, progress_bar, root)).pack(pady=10)
 
-    root.mainloop()
+        root.mainloop()
+    except Exception as e:
+        print(f"Ошибка в create_interface: {e}")
+        traceback.print_exc()
+        raise
 
 if __name__ == "__main__":
     create_interface()
