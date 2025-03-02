@@ -7,6 +7,7 @@ from PIL import Image
 from io import BytesIO
 
 def fetch_page(url):
+    """Загружает HTML-страницу по URL с переадресацией."""
     delay = random.uniform(1, 3)
     time.sleep(delay)
     headers = {
@@ -30,21 +31,25 @@ def fetch_page(url):
         return None
 
 def parse_page(html):
+    """Парсит HTML в BeautifulSoup."""
     return BeautifulSoup(html, 'html.parser') if html else None
 
 def extract_product_info(soup, config):
+    """Извлекает данные по пользовательским тегам из config."""
     if not soup:
         return {}
     
     product_info = {}
-    for tag, attr, role, sibling in config:
+    for tag, attr, role in config:
         try:
+            # Разбираем атрибут: "itemprop=name" -> {"itemprop": "name"}, "text=Штрихкод:" -> текст внутри тега
             if "=" in attr:
                 attr_key, attr_value = attr.split("=", 1)
                 if attr_key == "text":
+                    # Ищем тег с точным текстом
                     tag_elem = soup.find(tag, text=attr_value)
                     if tag_elem:
-                        for sib in sibling.split(","):
+                        for sib in sibling.split(","):  # Поддержка нескольких тегов через запятую
                             next_elem = tag_elem.find_next_sibling(sib.strip())
                             if next_elem:
                                 product_info[role] = next_elem.get_text(separator=" ", strip=True)
@@ -54,29 +59,24 @@ def extract_product_info(soup, config):
                     else:
                         product_info[role] = "N/A"
                 else:
+                    # Ищем по атрибуту
                     tag_elem = soup.find(tag, {attr_key: attr_value})
                     product_info[role] = tag_elem.get_text(separator=" ", strip=True) if tag_elem else "N/A"
             else:
+                # Простой тег без атрибутов
                 tag_elem = soup.find(tag, id=attr) if attr.startswith("id=") else soup.find(tag)
                 product_info[role] = tag_elem.get_text(separator=" ", strip=True) if tag_elem else "N/A"
         except Exception as e:
             product_info[role] = f"Ошибка: {e}"
     return product_info
 
-def download_images(soup, identifier, base_url, output_folder, image_container):
+def download_images(soup, identifier, base_path):
     if not soup:
         return []
 
-    try:
-        tag, attr_str = image_container.split(",", 1)
-        attr_key, attr_value = attr_str.split("=", 1)
-        container_attrs = {attr_key.strip(): attr_value.strip()}
-    except ValueError:
-        tag = image_container
-        container_attrs = {}
-
-    image_container_elem = soup.find(tag, **container_attrs)
-    if not image_container_elem:
+    base_url = "https://www.informat.ru"  # Пока оставим, до следующей итерации
+    image_container = soup.find('div', class_='item-slider-holder')
+    if not image_container:
         return []
 
     images = image_container_elem.find_all('img')
@@ -104,6 +104,7 @@ def download_images(soup, identifier, base_url, output_folder, image_container):
             if width < 110 or height < 110:
                 continue
 
+            # Первое подходящее — основное, второе — дополнительное
             if not main_image_set:
                 filename = f"{identifier}.jpg"
                 main_image_set = True
@@ -115,7 +116,7 @@ def download_images(soup, identifier, base_url, output_folder, image_container):
                 file.write(response.content)
             saved_images.append(file_path)
 
-            if len(saved_images) == 2:
+            if len(saved_images) == 2:  # Хватит двух
                 break
 
         except Exception:
