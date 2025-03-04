@@ -116,7 +116,7 @@ def configure_tags():
             ("dt", "text=Штрихкод:", "barcode", "dd"),
             ("div", "id=tab1", "description", "dd")
         ],
-        "image_container": "div, class_=item-slider-holder"
+        "image_container": "div, class_=catalog_detail detail element_1"
     }
     if Path("config.json").exists():
         with open("config.json", "r") as f:
