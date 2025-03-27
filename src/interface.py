@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, scrolledtext, ttk, Toplevel, Label, Canvas
 import pandas as pd
 from src.utils.helpers import fetch_page, parse_page, extract_product_info, download_images
+from src.utils.search_helper import fetch_search_page, get_item_count
 import json
 import time
 import random
@@ -15,7 +16,8 @@ def log_message(log_widget, message):
     log_widget.insert(tk.END, f"[{time.strftime('%H:%M:%S')}] {message}\n")
     log_widget.see(tk.END)
 
-def load_file():
+# === Парсер карточек ===
+def load_file_parser():
     file_path = filedialog.askopenfilename(
         title="Выберите файл содержащий ID, url на позицию, базовый url",
         filetypes=(("Excel files", "*.xlsx"), ("All files", "*.*"))
@@ -32,7 +34,7 @@ def configure_tags():
     config_win = Toplevel()
     config_win.title("Настройка тегов (макс. 30)")
     config_win.geometry("700x450")
-    config_win.iconbitmap("parser.ico")  # Добавляем иконку
+    config_win.iconbitmap("parser.ico")
 
     canvas = Canvas(config_win)
     scrollbar = ttk.Scrollbar(config_win, orient="vertical", command=canvas.yview)
@@ -162,7 +164,7 @@ def show_poem(root, completed, total_urls):
     poem_win.geometry("400x300")
     poem_win.transient(root)
     poem_win.grab_set()
-    poem_win.iconbitmap("parser.ico")  # Добавляем иконку
+    poem_win.iconbitmap("parser.ico")
 
     title, poem = random.choice(poems)
     tk.Label(poem_win, text=title, font=("Arial", 14, "bold")).pack(pady=5)
@@ -179,7 +181,6 @@ def show_poem(root, completed, total_urls):
 
     link_frame = tk.Frame(poem_win)
     link_frame.pack(pady=5)
-    # Убрали иконку рядом с гиперссылкой
     link_label = tk.Label(link_frame, text="Познакомиться с Наблюдателем", font=("Arial", 10, "underline"), fg="blue", cursor="hand2")
     link_label.pack()
     link_label.bind("<Button-1>", lambda e: webbrowser.open("https://t.me/watcher_of_universe"))
@@ -212,7 +213,7 @@ def parse_url(identifier, url, config, image_container, base_url, output_folder,
     result_queue.put([identifier, url] + [product_info.get(role, "N/A") for _, _, role, _ in config])
 
 def start_parsing(log_widget, progress_bar, root):
-    df = load_file()
+    df = load_file_parser()
     if df is None or df.empty:
         log_message(log_widget, "Файл не загружен или пуст.")
         messagebox.showerror("Ошибка", "Файл не загружен или пуст.")
@@ -280,20 +281,116 @@ def start_parsing(log_widget, progress_bar, root):
 
     threading.Thread(target=update_progress, daemon=True).start()
 
+# === Анализ запросов ===
+def load_file_analysis(log_widget):
+    file_path = filedialog.askopenfilename(
+        title="Выберите файл с запросами",
+        filetypes=(("Excel files", "*.xlsx"), ("All files", "*.*"))
+    )
+    if file_path:
+        try:
+            df = pd.read_excel(file_path)
+            if "Запросы" not in df.columns:
+                log_message(log_widget, "Ошибка: в файле нет колонки 'Запросы'")
+                return None
+            return df
+        except Exception as e:
+            log_message(log_widget, f"Ошибка загрузки файла: {e}")
+    return None
+
+def select_output_file(log_widget):
+    file_path = filedialog.asksaveasfilename(
+        title="Выберите папку и имя для сохранения результатов",
+        defaultextension=".xlsx",
+        initialfile="output.xlsx",
+        filetypes=(("Excel files", "*.xlsx"), ("All files", "*.*"))
+    )
+    if not file_path:
+        log_message(log_widget, "Файл для сохранения не выбран.")
+    return file_path
+
+def process_query(query, result_queue, log_widget):
+    if not isinstance(query, str) or not query.strip():
+        result_queue.put([query, "Пустой запрос"])
+        log_message(log_widget, f"Пропуск пустого запроса: {query}")
+        return
+    log_message(log_widget, f"Обрабатываю: {query}")
+    html = fetch_search_page(query)
+    count = get_item_count(html)
+    result_queue.put([query, count])
+    log_message(log_widget, f"Результат: {query} — {count} позиций")
+
+def start_analysis(log_widget, progress_bar, root):
+    df = load_file_analysis(log_widget)
+    if df is None or df.empty:
+        log_message(log_widget, "Файл не загружен или пуст.")
+        messagebox.showerror("Ошибка", "Файл не загружен или пуст.")
+        return
+
+    output_file = select_output_file(log_widget)
+    if not output_file:
+        messagebox.showerror("Ошибка", "Файл для сохранения не выбран.")
+        return
+
+    queries = df["Запросы"].tolist()
+    result_queue = queue.Queue()
+    total = len(queries)
+    threads = []
+
+    def update_progress():
+        completed = 0
+        results = []
+        while completed < total:
+            try:
+                result = result_queue.get(timeout=1)
+                results.append(result)
+                completed += 1
+                progress_bar['value'] = (completed / total) * 100
+                root.update_idletasks()
+            except queue.Empty:
+                root.update_idletasks()
+                time.sleep(1)
+
+        output_df = pd.DataFrame(results, columns=["Запрос", "Количество позиций"])
+        output_df.to_excel(output_file, index=False)
+        log_message(log_widget, f"Готово! Результаты сохранены в {output_file}")
+        messagebox.showinfo("Готово", f"Анализ завершён. Результаты в {output_file}")
+
+    for query in queries:
+        thread = threading.Thread(target=process_query, args=(query, result_queue, log_widget))
+        threads.append(thread)
+        thread.start()
+        time.sleep(random.uniform(10, 15))  # Задержка между потоками
+
+    threading.Thread(target=update_progress, daemon=True).start()
+
+# === Главный интерфейс ===
 def create_interface():
     root = tk.Tk()
-    root.title("Парсер")
+    root.title("Парсер и Анализ")
     root.geometry("800x600")
     root.iconbitmap("parser.ico")
 
-    global log_widget  # Делаем log_widget глобальным для доступа внутри show_poem
-    log_widget = scrolledtext.ScrolledText(root, width=90, height=25)
-    log_widget.pack(pady=10)
+    notebook = ttk.Notebook(root)
+    notebook.pack(pady=10, expand=True)
 
-    progress_bar = ttk.Progressbar(root, length=400, mode='determinate')
-    progress_bar.pack(pady=10)
+    # Вкладка 1: Парсер карточек
+    tab1 = ttk.Frame(notebook)
+    notebook.add(tab1, text="Парсер карточек")
+    log_widget1 = scrolledtext.ScrolledText(tab1, width=90, height=25)
+    log_widget1.pack(pady=10)
+    progress_bar1 = ttk.Progressbar(tab1, length=400, mode='determinate')
+    progress_bar1.pack(pady=10)
+    tk.Button(tab1, text="ПАРС", command=lambda: start_parsing(log_widget1, progress_bar1, root)).pack(pady=10)
 
-    tk.Button(root, text="ПАРС", command=lambda: start_parsing(log_widget, progress_bar, root)).pack(pady=10)
+    # Вкладка 2: Анализ запросов
+    tab2 = ttk.Frame(notebook)
+    notebook.add(tab2, text="Анализ запросов")
+    log_widget2 = scrolledtext.ScrolledText(tab2, width=90, height=25)
+    log_widget2.pack(pady=10)
+    progress_bar2 = ttk.Progressbar(tab2, length=400, mode='determinate')
+    progress_bar2.pack(pady=10)
+    tk.Button(tab2, text="АНАЛИЗ", command=lambda: start_analysis(log_widget2, progress_bar2, root)).pack(pady=10)
 
     root.mainloop()
 
