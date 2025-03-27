@@ -1,4 +1,5 @@
 import tkinter as tk
+from concurrent.futures import ThreadPoolExecutor
 from tkinter import filedialog, messagebox, scrolledtext, ttk, Toplevel, Label, Canvas
 import pandas as pd
 from src.utils.helpers import fetch_page, parse_page, extract_product_info, download_images
@@ -43,8 +44,15 @@ class App:
         self.max_retries_frame = tk.Frame(self.tab2)
         self.max_retries_frame.pack(pady=5)
         tk.Label(self.max_retries_frame, text="Сколько раз байтим нули:").pack(side=tk.LEFT)
-        self.max_retries_var = tk.IntVar(value=3)  # По умолчанию 3 попытки
+        self.max_retries_var = tk.IntVar(value=3)
         tk.Spinbox(self.max_retries_frame, from_=1, to=10, width=5, textvariable=self.max_retries_var).pack(side=tk.LEFT, padx=5)
+
+        # Выбор количества одновременно запущенных Chrome
+        self.chrome_count_frame = tk.Frame(self.tab2)
+        self.chrome_count_frame.pack(pady=5)
+        tk.Label(self.chrome_count_frame, text="Сколько Chrome одновременно:").pack(side=tk.LEFT)
+        self.chrome_count_var = tk.IntVar(value=2)  # По умолчанию 2
+        tk.Spinbox(self.chrome_count_frame, from_=1, to=10, width=5, textvariable=self.chrome_count_var).pack(side=tk.LEFT, padx=5)
 
         tk.Button(self.tab2, text="АНАЛИЗ", command=self.start_analysis_thread).pack(pady=10)
 
@@ -371,6 +379,8 @@ class App:
         thread.start()
 
     def start_analysis(self):
+        from concurrent.futures import ThreadPoolExecutor
+
         df = self.load_file_analysis()
         if df is None or df.empty:
             self.log(self.log_widget2, "Файл не загружен или пуст.")
@@ -385,16 +395,15 @@ class App:
 
         queries = df["Запросы"].tolist()
         result_queue = queue.Queue()
-        threads = []
-        max_retries = self.max_retries_var.get()  # Получаем значение из Spinbox
+        max_retries = self.max_retries_var.get()
+        max_workers = self.chrome_count_var.get()  # Количество одновременных Chrome
 
-        for query in queries:
-            thread = threading.Thread(target=self.process_query, args=(query, result_queue, max_retries))
-            threads.append(thread)
-            thread.start()
+        self.log(self.log_widget2, f"Запускаю анализ: {len(queries)} запросов, {max_workers} Chrome одновременно")
 
-        for thread in threads:
-            thread.join()
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = [executor.submit(self.process_query, query, result_queue, max_retries) for query in queries]
+            for future in futures:
+                future.result()  # Ждём завершения всех задач
 
         results = []
         while not result_queue.empty():
