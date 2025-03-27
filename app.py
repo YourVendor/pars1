@@ -1,4 +1,7 @@
-from src.interface import create_interface
+from src.interface import App
+import tkinter as tk
 
 if __name__ == "__main__":
-    create_interface()
+    root = tk.Tk()
+    app = App(root)
+    root.mainloop()

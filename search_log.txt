@@ -491,3 +491,183 @@ URL: https://www.wildberries.ru/catalog/0/search.aspx?search=%D1%81%D0%B2%D0%B5%
 HTML:
 <html lang="ru" translate="no" class="adaptive" style="--custom-promo-filter-color: #FFFFFF; --custom-promo-filter-background: #F700DB; --custom-promo-filter-switch-color: #BABABF; --custom-promo-filter-switch-background: #FFFFFF; --custom-promo-filter-switch-active-color: #FFFFFF; --custom-promo-filter-switch-active-background: #7CD71F;"><head> <meta charset="UTF-8"> <meta name="format-detection" content="telephone=no"> <meta name="referrer" content="no-referrer-when-downgrade"> <meta name="viewport" content="width=device-width,initial-scale=1"> <meta name="application-name" content="Wildberries"> <meta name="yandex-verification" content="61b95d33285e2612"> <meta name="google-site-verification" content="guMau7oNvBifqUhZGuuGVtiGD0HkKe8v6uwYpvj2ZIg"> <meta name="apple-itunes-app" content="app-id=597880187"> <link rel="manifest" href="/manifestv2.json"> <link rel="yandex-tableau-widget" href="/yandex-tableau-manifest.json"> <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="test"> <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon"> <link rel="icon" href="/icon.svg" type="image/svg+xml"> <meta property="og:type" content="website"> <meta property="og:url" content="https://www.wildberries.ru"> <meta property="og:title" content="Интернет-магазин Wildberries: широкий ассортимент товаров - скидки каждый день!"> <meta property="og:image" content="//static-basket-01.wbbasket.ru/vol2/site/i/wb-og-win.jpg"> <meta property="og:description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <meta name="description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <link rel="preconnect" href="https://static-basket-01.wbbasket.ru"> <link rel="preconnect" href="https://splitter.w
 ---
+[12:57:51] Ошибка для дюбель гвоздь для порохового пистолета: Message: 
+Stacktrace:
+	GetHandleVerifier [0x00007FF7C8F44C25+3179557]
+	(No symbol) [0x00007FF7C8BA88A0]
+	(No symbol) [0x00007FF7C8A391CA]
+	(No symbol) [0x00007FF7C8A8FA67]
+	(No symbol) [0x00007FF7C8A8FC9C]
+	(No symbol) [0x00007FF7C8AE3627]
+	(No symbol) [0x00007FF7C8AB7C6F]
+	(No symbol) [0x00007FF7C8AE02F3]
+	(No symbol) [0x00007FF7C8AB7A03]
+	(No symbol) [0x00007FF7C8A806D0]
+	(No symbol) [0x00007FF7C8A81983]
+	GetHandleVerifier [0x00007FF7C8FA67CD+3579853]
+	GetHandleVerifier [0x00007FF7C8FBD1D2+3672530]
+	GetHandleVerifier [0x00007FF7C8FB2153+3627347]
+	GetHandleVerifier [0x00007FF7C8D1092A+868650]
+	(No symbol) [0x00007FF7C8BB2FFF]
+	(No symbol) [0x00007FF7C8BAF4A4]
+	(No symbol) [0x00007FF7C8BAF646]
+	(No symbol) [0x00007FF7C8B9EAA9]
+	BaseThreadInitThunk [0x00007FFE1A213034+20]
+	RtlUserThreadStart [0x00007FFE1B0F1461+33]
+
+[12:57:58] Ошибка для дюбель гвоздь 6х80: HTTPConnectionPool(host='localhost', port=7949): Read timed out. (read timeout=120)
+[12:58:00] Ошибка для дюбель гвоздь 6х40: HTTPConnectionPool(host='localhost', port=7939): Read timed out. (read timeout=120)
+[12:58:09] Ошибка для дюбель бабочка: HTTPConnectionPool(host='localhost', port=7943): Read timed out. (read timeout=120)
+[12:58:12] Ошибка для дюбель 6*40: HTTPConnectionPool(host='localhost', port=7948): Read timed out. (read timeout=120)
+[12:58:13] Ошибка для дюбель хомут для кабеля: HTTPConnectionPool(host='localhost', port=7952): Read timed out. (read timeout=120)
+[12:58:17] Ошибка для дюбель бабочка для гипсокартона: HTTPConnectionPool(host='localhost', port=7947): Read timed out. (read timeout=120)
+[12:58:19] Ошибка для дюбель для газобетона: HTTPConnectionPool(host='localhost', port=7941): Read timed out. (read timeout=120)
+[12:58:20] Ошибка для дюбель гвозди: HTTPConnectionPool(host='localhost', port=7953): Read timed out. (read timeout=120)
+[12:58:22] Ошибка для дюбель хомут для плоского кабеля: HTTPConnectionPool(host='localhost', port=7946): Read timed out. (read timeout=120)
+[12:58:23] Ошибка для дюбель гвоздь 8х100: HTTPConnectionPool(host='localhost', port=7956): Read timed out. (read timeout=120)
+[12:58:23] Ошибка для дюбель для гипсокортона: Message: 
+Stacktrace:
+	GetHandleVerifier [0x00007FF7C8F44C25+3179557]
+	(No symbol) [0x00007FF7C8BA88A0]
+	(No symbol) [0x00007FF7C8A391CA]
+	(No symbol) [0x00007FF7C8A8FA67]
+	(No symbol) [0x00007FF7C8A8FC9C]
+	(No symbol) [0x00007FF7C8AE3627]
+	(No symbol) [0x00007FF7C8AB7C6F]
+	(No symbol) [0x00007FF7C8AE02F3]
+	(No symbol) [0x00007FF7C8AB7A03]
+	(No symbol) [0x00007FF7C8A806D0]
+	(No symbol) [0x00007FF7C8A81983]
+	GetHandleVerifier [0x00007FF7C8FA67CD+3579853]
+	GetHandleVerifier [0x00007FF7C8FBD1D2+3672530]
+	GetHandleVerifier [0x00007FF7C8FB2153+3627347]
+	GetHandleVerifier [0x00007FF7C8D1092A+868650]
+	(No symbol) [0x00007FF7C8BB2FFF]
+	(No symbol) [0x00007FF7C8BAF4A4]
+	(No symbol) [0x00007FF7C8BAF646]
+	(No symbol) [0x00007FF7C8B9EAA9]
+	BaseThreadInitThunk [0x00007FFE1A213034+20]
+	RtlUserThreadStart [0x00007FFE1B0F1461+33]
+
+[12:58:24] Ошибка для дюбель для бетона: HTTPConnectionPool(host='localhost', port=7954): Read timed out. (read timeout=120)
+[12:58:25] Ошибка для дюбель молли: Message: 
+Stacktrace:
+	GetHandleVerifier [0x00007FF7C8F44C25+3179557]
+	(No symbol) [0x00007FF7C8BA88A0]
+	(No symbol) [0x00007FF7C8A391CA]
+	(No symbol) [0x00007FF7C8A8FA67]
+	(No symbol) [0x00007FF7C8A8FC9C]
+	(No symbol) [0x00007FF7C8AE3627]
+	(No symbol) [0x00007FF7C8AB7C6F]
+	(No symbol) [0x00007FF7C8AE02F3]
+	(No symbol) [0x00007FF7C8AB7A03]
+	(No symbol) [0x00007FF7C8A806D0]
+	(No symbol) [0x00007FF7C8A81983]
+	GetHandleVerifier [0x00007FF7C8FA67CD+3579853]
+	GetHandleVerifier [0x00007FF7C8FBD1D2+3672530]
+	GetHandleVerifier [0x00007FF7C8FB2153+3627347]
+	GetHandleVerifier [0x00007FF7C8D1092A+868650]
+	(No symbol) [0x00007FF7C8BB2FFF]
+	(No symbol) [0x00007FF7C8BAF4A4]
+	(No symbol) [0x00007FF7C8BAF646]
+	(No symbol) [0x00007FF7C8B9EAA9]
+	BaseThreadInitThunk [0x00007FFE1A213034+20]
+	RtlUserThreadStart [0x00007FFE1B0F1461+33]
+
+[12:58:25] Ошибка для дюбель хомут: HTTPConnectionPool(host='localhost', port=7942): Read timed out. (read timeout=120)
+[12:58:25] Ошибка для дюбель для теплоизоляции: HTTPConnectionPool(host='localhost', port=7945): Read timed out. (read timeout=120)
+[12:58:25] Ошибка для дюбель распорный: HTTPConnectionPool(host='localhost', port=7958): Read timed out. (read timeout=120)
+[12:58:25] Ошибка для дюбель гвоздь 6х60: HTTPConnectionPool(host='localhost', port=7950): Read timed out. (read timeout=120)
+[12:58:25] Ошибка для дюбель гвоздь: HTTPConnectionPool(host='localhost', port=7940): Read timed out. (read timeout=120)
+[12:58:26] Ошибка для ﻿джинсы женские: Message: 
+Stacktrace:
+	GetHandleVerifier [0x00007FF7C8F44C25+3179557]
+	(No symbol) [0x00007FF7C8BA88A0]
+	(No symbol) [0x00007FF7C8A391CA]
+	(No symbol) [0x00007FF7C8A8FA67]
+	(No symbol) [0x00007FF7C8A8FC9C]
+	(No symbol) [0x00007FF7C8AE3627]
+	(No symbol) [0x00007FF7C8AB7C6F]
+	(No symbol) [0x00007FF7C8AE02F3]
+	(No symbol) [0x00007FF7C8AB7A03]
+	(No symbol) [0x00007FF7C8A806D0]
+	(No symbol) [0x00007FF7C8A81983]
+	GetHandleVerifier [0x00007FF7C8FA67CD+3579853]
+	GetHandleVerifier [0x00007FF7C8FBD1D2+3672530]
+	GetHandleVerifier [0x00007FF7C8FB2153+3627347]
+	GetHandleVerifier [0x00007FF7C8D1092A+868650]
+	(No symbol) [0x00007FF7C8BB2FFF]
+	(No symbol) [0x00007FF7C8BAF4A4]
+	(No symbol) [0x00007FF7C8BAF646]
+	(No symbol) [0x00007FF7C8B9EAA9]
+	BaseThreadInitThunk [0x00007FFE1A213034+20]
+	RtlUserThreadStart [0x00007FFE1B0F1461+33]
+
+[12:58:26] Запрос: дюбель для гипсокартона
+URL: https://www.wildberries.ru/catalog/0/search.aspx?search=%D0%B4%D1%8E%D0%B1%D0%B5%D0%BB%D1%8C%20%D0%B4%D0%BB%D1%8F%20%D0%B3%D0%B8%D0%BF%D1%81%D0%BE%D0%BA%D0%B0%D1%80%D1%82%D0%BE%D0%BD%D0%B0
+HTML:
+<html lang="ru" translate="no" class="adaptive"><head> <meta charset="UTF-8"> <meta name="format-detection" content="telephone=no"> <meta name="referrer" content="no-referrer-when-downgrade"> <meta name="viewport" content="width=device-width,initial-scale=1"> <meta name="application-name" content="Wildberries"> <meta name="yandex-verification" content="61b95d33285e2612"> <meta name="google-site-verification" content="guMau7oNvBifqUhZGuuGVtiGD0HkKe8v6uwYpvj2ZIg"> <meta name="apple-itunes-app" content="app-id=597880187"> <link rel="manifest" href="/manifestv2.json"> <link rel="yandex-tableau-widget" href="/yandex-tableau-manifest.json"> <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="test"> <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon"> <link rel="icon" href="/icon.svg" type="image/svg+xml"> <meta property="og:type" content="website"> <meta property="og:url" content="https://www.wildberries.ru"> <meta property="og:title" content="Интернет-магазин Wildberries: широкий ассортимент товаров - скидки каждый день!"> <meta property="og:image" content="//static-basket-01.wbbasket.ru/vol2/site/i/wb-og-win.jpg"> <meta property="og:description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <meta name="description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <link rel="preconnect" href="https://static-basket-01.wbbasket.ru"> <link rel="preconnect" href="https://splitter.wb.ru"> <link rel="preload" href="//static-basket-01.wbbasket.ru/vol2/site/f/als-hauss-vf.woff2" as="font" type="font/woff2" crossorigin="" fetchpriority="high"> <link rel="stylesheet" href="//static-basket-01.wbbasket.ru/vol2/site/s/desktop/style/views/spa/main-v3.3f468264c482632d5489.css" fe
+---
+[12:58:40] Ошибка для дюбель пистолет: HTTPConnectionPool(host='localhost', port=7955): Read timed out. (read timeout=120)
+[12:58:43] Ошибка для дюбель: HTTPConnectionPool(host='localhost', port=7936): Read timed out. (read timeout=120)
+[12:58:44] Ошибка для дюбельный пистолет: HTTPConnectionPool(host='localhost', port=7957): Read timed out. (read timeout=120)
+[13:31:21] Запрос: дюбель
+URL: https://www.wildberries.ru/catalog/0/search.aspx?search=%D0%B4%D1%8E%D0%B1%D0%B5%D0%BB%D1%8C
+HTML:
+<html lang="ru" translate="no" class="adaptive" style="--custom-promo-filter-color: #FFFFFF; --custom-promo-filter-background: #F700DB; --custom-promo-filter-switch-color: #BABABF; --custom-promo-filter-switch-background: #FFFFFF; --custom-promo-filter-switch-active-color: #FFFFFF; --custom-promo-filter-switch-active-background: #7CD71F;"><head> <meta charset="UTF-8"> <meta name="format-detection" content="telephone=no"> <meta name="referrer" content="no-referrer-when-downgrade"> <meta name="viewport" content="width=device-width,initial-scale=1"> <meta name="application-name" content="Wildberries"> <meta name="yandex-verification" content="61b95d33285e2612"> <meta name="google-site-verification" content="guMau7oNvBifqUhZGuuGVtiGD0HkKe8v6uwYpvj2ZIg"> <meta name="apple-itunes-app" content="app-id=597880187"> <link rel="manifest" href="/manifestv2.json"> <link rel="yandex-tableau-widget" href="/yandex-tableau-manifest.json"> <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="test"> <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon"> <link rel="icon" href="/icon.svg" type="image/svg+xml"> <meta property="og:type" content="website"> <meta property="og:url" content="https://www.wildberries.ru"> <meta property="og:title" content="Интернет-магазин Wildberries: широкий ассортимент товаров - скидки каждый день!"> <meta property="og:image" content="//static-basket-01.wbbasket.ru/vol2/site/i/wb-og-win.jpg"> <meta property="og:description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <meta name="description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <link rel="preconnect" href="https://static-basket-01.wbbasket.ru"> <link rel="preconnect" href="https://splitter.w
+---
+[13:31:27] Запрос: дюбель гвоздь
+URL: https://www.wildberries.ru/catalog/0/search.aspx?search=%D0%B4%D1%8E%D0%B1%D0%B5%D0%BB%D1%8C%20%D0%B3%D0%B2%D0%BE%D0%B7%D0%B4%D1%8C
+HTML:
+<html lang="ru" translate="no" class="adaptive" style="--custom-promo-filter-color: #FFFFFF; --custom-promo-filter-background: #F700DB; --custom-promo-filter-switch-color: #BABABF; --custom-promo-filter-switch-background: #FFFFFF; --custom-promo-filter-switch-active-color: #FFFFFF; --custom-promo-filter-switch-active-background: #7CD71F;"><head> <meta charset="UTF-8"> <meta name="format-detection" content="telephone=no"> <meta name="referrer" content="no-referrer-when-downgrade"> <meta name="viewport" content="width=device-width,initial-scale=1"> <meta name="application-name" content="Wildberries"> <meta name="yandex-verification" content="61b95d33285e2612"> <meta name="google-site-verification" content="guMau7oNvBifqUhZGuuGVtiGD0HkKe8v6uwYpvj2ZIg"> <meta name="apple-itunes-app" content="app-id=597880187"> <link rel="manifest" href="/manifestv2.json"> <link rel="yandex-tableau-widget" href="/yandex-tableau-manifest.json"> <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="test"> <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon"> <link rel="icon" href="/icon.svg" type="image/svg+xml"> <meta property="og:type" content="website"> <meta property="og:url" content="https://www.wildberries.ru"> <meta property="og:title" content="Интернет-магазин Wildberries: широкий ассортимент товаров - скидки каждый день!"> <meta property="og:image" content="//static-basket-01.wbbasket.ru/vol2/site/i/wb-og-win.jpg"> <meta property="og:description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <meta name="description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <link rel="preconnect" href="https://static-basket-01.wbbasket.ru"> <link rel="preconnect" href="https://splitter.w
+---
+[13:31:29] Запрос: дюбель 6*40
+URL: https://www.wildberries.ru/catalog/0/search.aspx?search=%D0%B4%D1%8E%D0%B1%D0%B5%D0%BB%D1%8C%206*40
+HTML:
+<html lang="ru" translate="no" class="adaptive" style="--custom-promo-filter-color: #FFFFFF; --custom-promo-filter-background: #F700DB; --custom-promo-filter-switch-color: #BABABF; --custom-promo-filter-switch-background: #FFFFFF; --custom-promo-filter-switch-active-color: #FFFFFF; --custom-promo-filter-switch-active-background: #7CD71F;"><head> <meta charset="UTF-8"> <meta name="format-detection" content="telephone=no"> <meta name="referrer" content="no-referrer-when-downgrade"> <meta name="viewport" content="width=device-width,initial-scale=1"> <meta name="application-name" content="Wildberries"> <meta name="yandex-verification" content="61b95d33285e2612"> <meta name="google-site-verification" content="guMau7oNvBifqUhZGuuGVtiGD0HkKe8v6uwYpvj2ZIg"> <meta name="apple-itunes-app" content="app-id=597880187"> <link rel="manifest" href="/manifestv2.json"> <link rel="yandex-tableau-widget" href="/yandex-tableau-manifest.json"> <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="test"> <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon"> <link rel="icon" href="/icon.svg" type="image/svg+xml"> <meta property="og:type" content="website"> <meta property="og:url" content="https://www.wildberries.ru"> <meta property="og:title" content="Интернет-магазин Wildberries: широкий ассортимент товаров - скидки каждый день!"> <meta property="og:image" content="//static-basket-01.wbbasket.ru/vol2/site/i/wb-og-win.jpg"> <meta property="og:description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <meta name="description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <link rel="preconnect" href="https://static-basket-01.wbbasket.ru"> <link rel="preconnect" href="https://splitter.w
+---
+[13:31:37] Запрос: ﻿джинсы женские
+URL: https://www.wildberries.ru/catalog/0/search.aspx?search=%EF%BB%BF%D0%B4%D0%B6%D0%B8%D0%BD%D1%81%D1%8B%20%D0%B6%D0%B5%D0%BD%D1%81%D0%BA%D0%B8%D0%B5
+HTML:
+<html lang="ru" translate="no" class="adaptive" style="--custom-promo-filter-color: #FFFFFF; --custom-promo-filter-background: #F700DB; --custom-promo-filter-switch-color: #BABABF; --custom-promo-filter-switch-background: #FFFFFF; --custom-promo-filter-switch-active-color: #FFFFFF; --custom-promo-filter-switch-active-background: #7CD71F;"><head> <meta charset="UTF-8"> <meta name="format-detection" content="telephone=no"> <meta name="referrer" content="no-referrer-when-downgrade"> <meta name="viewport" content="width=device-width,initial-scale=1"> <meta name="application-name" content="Wildberries"> <meta name="yandex-verification" content="61b95d33285e2612"> <meta name="google-site-verification" content="guMau7oNvBifqUhZGuuGVtiGD0HkKe8v6uwYpvj2ZIg"> <meta name="apple-itunes-app" content="app-id=597880187"> <link rel="manifest" href="/manifestv2.json"> <link rel="yandex-tableau-widget" href="/yandex-tableau-manifest.json"> <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="test"> <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon"> <link rel="icon" href="/icon.svg" type="image/svg+xml"> <meta property="og:type" content="website"> <meta property="og:url" content="https://www.wildberries.ru"> <meta property="og:title" content="Интернет-магазин Wildberries: широкий ассортимент товаров - скидки каждый день!"> <meta property="og:image" content="//static-basket-01.wbbasket.ru/vol2/site/i/wb-og-win.jpg"> <meta property="og:description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <meta name="description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <link rel="preconnect" href="https://static-basket-01.wbbasket.ru"> <link rel="preconnect" href="https://splitter.w
+---
+[13:31:37] Запрос: дюбель для гипсокартона
+URL: https://www.wildberries.ru/catalog/0/search.aspx?search=%D0%B4%D1%8E%D0%B1%D0%B5%D0%BB%D1%8C%20%D0%B4%D0%BB%D1%8F%20%D0%B3%D0%B8%D0%BF%D1%81%D0%BE%D0%BA%D0%B0%D1%80%D1%82%D0%BE%D0%BD%D0%B0
+HTML:
+<html lang="ru" translate="no" class="adaptive" style="--custom-promo-filter-color: #FFFFFF; --custom-promo-filter-background: #F700DB; --custom-promo-filter-switch-color: #BABABF; --custom-promo-filter-switch-background: #FFFFFF; --custom-promo-filter-switch-active-color: #FFFFFF; --custom-promo-filter-switch-active-background: #7CD71F;"><head> <meta charset="UTF-8"> <meta name="format-detection" content="telephone=no"> <meta name="referrer" content="no-referrer-when-downgrade"> <meta name="viewport" content="width=device-width,initial-scale=1"> <meta name="application-name" content="Wildberries"> <meta name="yandex-verification" content="61b95d33285e2612"> <meta name="google-site-verification" content="guMau7oNvBifqUhZGuuGVtiGD0HkKe8v6uwYpvj2ZIg"> <meta name="apple-itunes-app" content="app-id=597880187"> <link rel="manifest" href="/manifestv2.json"> <link rel="yandex-tableau-widget" href="/yandex-tableau-manifest.json"> <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="test"> <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon"> <link rel="icon" href="/icon.svg" type="image/svg+xml"> <meta property="og:type" content="website"> <meta property="og:url" content="https://www.wildberries.ru"> <meta property="og:title" content="Интернет-магазин Wildberries: широкий ассортимент товаров - скидки каждый день!"> <meta property="og:image" content="//static-basket-01.wbbasket.ru/vol2/site/i/wb-og-win.jpg"> <meta property="og:description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <meta name="description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <link rel="preconnect" href="https://static-basket-01.wbbasket.ru"> <link rel="preconnect" href="https://splitter.w
+---
+[13:31:38] Запрос: дюбель гвоздь 6х40
+URL: https://www.wildberries.ru/catalog/0/search.aspx?search=%D0%B4%D1%8E%D0%B1%D0%B5%D0%BB%D1%8C%20%D0%B3%D0%B2%D0%BE%D0%B7%D0%B4%D1%8C%206%D1%8540
+HTML:
+<html lang="ru" translate="no" class="adaptive" style="--custom-promo-filter-color: #FFFFFF; --custom-promo-filter-background: #F700DB; --custom-promo-filter-switch-color: #BABABF; --custom-promo-filter-switch-background: #FFFFFF; --custom-promo-filter-switch-active-color: #FFFFFF; --custom-promo-filter-switch-active-background: #7CD71F;"><head> <meta charset="UTF-8"> <meta name="format-detection" content="telephone=no"> <meta name="referrer" content="no-referrer-when-downgrade"> <meta name="viewport" content="width=device-width,initial-scale=1"> <meta name="application-name" content="Wildberries"> <meta name="yandex-verification" content="61b95d33285e2612"> <meta name="google-site-verification" content="guMau7oNvBifqUhZGuuGVtiGD0HkKe8v6uwYpvj2ZIg"> <meta name="apple-itunes-app" content="app-id=597880187"> <link rel="manifest" href="/manifestv2.json"> <link rel="yandex-tableau-widget" href="/yandex-tableau-manifest.json"> <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="test"> <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon"> <link rel="icon" href="/icon.svg" type="image/svg+xml"> <meta property="og:type" content="website"> <meta property="og:url" content="https://www.wildberries.ru"> <meta property="og:title" content="Интернет-магазин Wildberries: широкий ассортимент товаров - скидки каждый день!"> <meta property="og:image" content="//static-basket-01.wbbasket.ru/vol2/site/i/wb-og-win.jpg"> <meta property="og:description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <meta name="description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <link rel="preconnect" href="https://static-basket-01.wbbasket.ru"> <link rel="preconnect" href="https://splitter.w
+---
+[13:36:10] Запрос: ﻿джинсы женские
+URL: https://www.wildberries.ru/catalog/0/search.aspx?search=%EF%BB%BF%D0%B4%D0%B6%D0%B8%D0%BD%D1%81%D1%8B%20%D0%B6%D0%B5%D0%BD%D1%81%D0%BA%D0%B8%D0%B5
+HTML:
+<html lang="ru" translate="no" class="adaptive" style="--custom-promo-filter-color: #FFFFFF; --custom-promo-filter-background: #F700DB; --custom-promo-filter-switch-color: #BABABF; --custom-promo-filter-switch-background: #FFFFFF; --custom-promo-filter-switch-active-color: #FFFFFF; --custom-promo-filter-switch-active-background: #7CD71F;"><head> <meta charset="UTF-8"> <meta name="format-detection" content="telephone=no"> <meta name="referrer" content="no-referrer-when-downgrade"> <meta name="viewport" content="width=device-width,initial-scale=1"> <meta name="application-name" content="Wildberries"> <meta name="yandex-verification" content="61b95d33285e2612"> <meta name="google-site-verification" content="guMau7oNvBifqUhZGuuGVtiGD0HkKe8v6uwYpvj2ZIg"> <meta name="apple-itunes-app" content="app-id=597880187"> <link rel="manifest" href="/manifestv2.json"> <link rel="yandex-tableau-widget" href="/yandex-tableau-manifest.json"> <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="test"> <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon"> <link rel="icon" href="/icon.svg" type="image/svg+xml"> <meta property="og:type" content="website"> <meta property="og:url" content="https://www.wildberries.ru"> <meta property="og:title" content="Интернет-магазин Wildberries: широкий ассортимент товаров - скидки каждый день!"> <meta property="og:image" content="//static-basket-01.wbbasket.ru/vol2/site/i/wb-og-win.jpg"> <meta property="og:description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <meta name="description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <link rel="preconnect" href="https://static-basket-01.wbbasket.ru"> <link rel="preconnect" href="https://splitter.w
+---
+[13:36:10] Запрос: дюбель для гипсокартона
+URL: https://www.wildberries.ru/catalog/0/search.aspx?search=%D0%B4%D1%8E%D0%B1%D0%B5%D0%BB%D1%8C%20%D0%B4%D0%BB%D1%8F%20%D0%B3%D0%B8%D0%BF%D1%81%D0%BE%D0%BA%D0%B0%D1%80%D1%82%D0%BE%D0%BD%D0%B0
+HTML:
+<html lang="ru" translate="no" class="adaptive" style="--custom-promo-filter-color: #FFFFFF; --custom-promo-filter-background: #F700DB; --custom-promo-filter-switch-color: #BABABF; --custom-promo-filter-switch-background: #FFFFFF; --custom-promo-filter-switch-active-color: #FFFFFF; --custom-promo-filter-switch-active-background: #7CD71F;"><head> <meta charset="UTF-8"> <meta name="format-detection" content="telephone=no"> <meta name="referrer" content="no-referrer-when-downgrade"> <meta name="viewport" content="width=device-width,initial-scale=1"> <meta name="application-name" content="Wildberries"> <meta name="yandex-verification" content="61b95d33285e2612"> <meta name="google-site-verification" content="guMau7oNvBifqUhZGuuGVtiGD0HkKe8v6uwYpvj2ZIg"> <meta name="apple-itunes-app" content="app-id=597880187"> <link rel="manifest" href="/manifestv2.json"> <link rel="yandex-tableau-widget" href="/yandex-tableau-manifest.json"> <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="test"> <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon"> <link rel="icon" href="/icon.svg" type="image/svg+xml"> <meta property="og:type" content="website"> <meta property="og:url" content="https://www.wildberries.ru"> <meta property="og:title" content="Интернет-магазин Wildberries: широкий ассортимент товаров - скидки каждый день!"> <meta property="og:image" content="//static-basket-01.wbbasket.ru/vol2/site/i/wb-og-win.jpg"> <meta property="og:description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <meta name="description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <link rel="preconnect" href="https://static-basket-01.wbbasket.ru"> <link rel="preconnect" href="https://splitter.w
+---
+[13:36:20] Запрос: дюбель
+URL: https://www.wildberries.ru/catalog/0/search.aspx?search=%D0%B4%D1%8E%D0%B1%D0%B5%D0%BB%D1%8C
+HTML:
+<html lang="ru" translate="no" class="adaptive" style="--custom-promo-filter-color: #FFFFFF; --custom-promo-filter-background: #F700DB; --custom-promo-filter-switch-color: #BABABF; --custom-promo-filter-switch-background: #FFFFFF; --custom-promo-filter-switch-active-color: #FFFFFF; --custom-promo-filter-switch-active-background: #7CD71F;"><head> <meta charset="UTF-8"> <meta name="format-detection" content="telephone=no"> <meta name="referrer" content="no-referrer-when-downgrade"> <meta name="viewport" content="width=device-width,initial-scale=1"> <meta name="application-name" content="Wildberries"> <meta name="yandex-verification" content="61b95d33285e2612"> <meta name="google-site-verification" content="guMau7oNvBifqUhZGuuGVtiGD0HkKe8v6uwYpvj2ZIg"> <meta name="apple-itunes-app" content="app-id=597880187"> <link rel="manifest" href="/manifestv2.json"> <link rel="yandex-tableau-widget" href="/yandex-tableau-manifest.json"> <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="test"> <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon"> <link rel="icon" href="/icon.svg" type="image/svg+xml"> <meta property="og:type" content="website"> <meta property="og:url" content="https://www.wildberries.ru"> <meta property="og:title" content="Интернет-магазин Wildberries: широкий ассортимент товаров - скидки каждый день!"> <meta property="og:image" content="//static-basket-01.wbbasket.ru/vol2/site/i/wb-og-win.jpg"> <meta property="og:description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <meta name="description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <link rel="preconnect" href="https://static-basket-01.wbbasket.ru"> <link rel="preconnect" href="https://splitter.w
+---
+[13:36:21] Запрос: дюбель гвоздь
+URL: https://www.wildberries.ru/catalog/0/search.aspx?search=%D0%B4%D1%8E%D0%B1%D0%B5%D0%BB%D1%8C%20%D0%B3%D0%B2%D0%BE%D0%B7%D0%B4%D1%8C
+HTML:
+<html lang="ru" translate="no" class="adaptive" style="--custom-promo-filter-color: #FFFFFF; --custom-promo-filter-background: #F700DB; --custom-promo-filter-switch-color: #BABABF; --custom-promo-filter-switch-background: #FFFFFF; --custom-promo-filter-switch-active-color: #FFFFFF; --custom-promo-filter-switch-active-background: #7CD71F;"><head> <meta charset="UTF-8"> <meta name="format-detection" content="telephone=no"> <meta name="referrer" content="no-referrer-when-downgrade"> <meta name="viewport" content="width=device-width,initial-scale=1"> <meta name="application-name" content="Wildberries"> <meta name="yandex-verification" content="61b95d33285e2612"> <meta name="google-site-verification" content="guMau7oNvBifqUhZGuuGVtiGD0HkKe8v6uwYpvj2ZIg"> <meta name="apple-itunes-app" content="app-id=597880187"> <link rel="manifest" href="/manifestv2.json"> <link rel="yandex-tableau-widget" href="/yandex-tableau-manifest.json"> <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="test"> <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon"> <link rel="icon" href="/icon.svg" type="image/svg+xml"> <meta property="og:type" content="website"> <meta property="og:url" content="https://www.wildberries.ru"> <meta property="og:title" content="Интернет-магазин Wildberries: широкий ассортимент товаров - скидки каждый день!"> <meta property="og:image" content="//static-basket-01.wbbasket.ru/vol2/site/i/wb-og-win.jpg"> <meta property="og:description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <meta name="description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <link rel="preconnect" href="https://static-basket-01.wbbasket.ru"> <link rel="preconnect" href="https://splitter.w
+---
+[13:36:22] Запрос: дюбель 6*40
+URL: https://www.wildberries.ru/catalog/0/search.aspx?search=%D0%B4%D1%8E%D0%B1%D0%B5%D0%BB%D1%8C%206*40
+HTML:
+<html lang="ru" translate="no" class="adaptive" style="--custom-promo-filter-color: #FFFFFF; --custom-promo-filter-background: #F700DB; --custom-promo-filter-switch-color: #BABABF; --custom-promo-filter-switch-background: #FFFFFF; --custom-promo-filter-switch-active-color: #FFFFFF; --custom-promo-filter-switch-active-background: #7CD71F;"><head> <meta charset="UTF-8"> <meta name="format-detection" content="telephone=no"> <meta name="referrer" content="no-referrer-when-downgrade"> <meta name="viewport" content="width=device-width,initial-scale=1"> <meta name="application-name" content="Wildberries"> <meta name="yandex-verification" content="61b95d33285e2612"> <meta name="google-site-verification" content="guMau7oNvBifqUhZGuuGVtiGD0HkKe8v6uwYpvj2ZIg"> <meta name="apple-itunes-app" content="app-id=597880187"> <link rel="manifest" href="/manifestv2.json"> <link rel="yandex-tableau-widget" href="/yandex-tableau-manifest.json"> <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="test"> <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon"> <link rel="icon" href="/icon.svg" type="image/svg+xml"> <meta property="og:type" content="website"> <meta property="og:url" content="https://www.wildberries.ru"> <meta property="og:title" content="Интернет-магазин Wildberries: широкий ассортимент товаров - скидки каждый день!"> <meta property="og:image" content="//static-basket-01.wbbasket.ru/vol2/site/i/wb-og-win.jpg"> <meta property="og:description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <meta name="description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <link rel="preconnect" href="https://static-basket-01.wbbasket.ru"> <link rel="preconnect" href="https://splitter.w
+---
+[13:36:23] Запрос: дюбель гвоздь 6х40
+URL: https://www.wildberries.ru/catalog/0/search.aspx?search=%D0%B4%D1%8E%D0%B1%D0%B5%D0%BB%D1%8C%20%D0%B3%D0%B2%D0%BE%D0%B7%D0%B4%D1%8C%206%D1%8540
+HTML:
+<html lang="ru" translate="no" class="adaptive" style="--custom-promo-filter-color: #FFFFFF; --custom-promo-filter-background: #F700DB; --custom-promo-filter-switch-color: #BABABF; --custom-promo-filter-switch-background: #FFFFFF; --custom-promo-filter-switch-active-color: #FFFFFF; --custom-promo-filter-switch-active-background: #7CD71F;"><head> <meta charset="UTF-8"> <meta name="format-detection" content="telephone=no"> <meta name="referrer" content="no-referrer-when-downgrade"> <meta name="viewport" content="width=device-width,initial-scale=1"> <meta name="application-name" content="Wildberries"> <meta name="yandex-verification" content="61b95d33285e2612"> <meta name="google-site-verification" content="guMau7oNvBifqUhZGuuGVtiGD0HkKe8v6uwYpvj2ZIg"> <meta name="apple-itunes-app" content="app-id=597880187"> <link rel="manifest" href="/manifestv2.json"> <link rel="yandex-tableau-widget" href="/yandex-tableau-manifest.json"> <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="test"> <link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon"> <link rel="icon" href="/icon.svg" type="image/svg+xml"> <meta property="og:type" content="website"> <meta property="og:url" content="https://www.wildberries.ru"> <meta property="og:title" content="Интернет-магазин Wildberries: широкий ассортимент товаров - скидки каждый день!"> <meta property="og:image" content="//static-basket-01.wbbasket.ru/vol2/site/i/wb-og-win.jpg"> <meta property="og:description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <meta name="description" content="Коллекции женской, мужской и детской одежды, обуви, а также товары для дома и спорта. Информация о доставке и оплате. Таблицы размеров, советы по уходу за вещами."> <link rel="preconnect" href="https://static-basket-01.wbbasket.ru"> <link rel="preconnect" href="https://splitter.w
+---
