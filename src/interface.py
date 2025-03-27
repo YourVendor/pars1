@@ -38,6 +38,14 @@ class App:
         self.notebook.add(self.tab2, text="Анализ запросов")
         self.log_widget2 = scrolledtext.ScrolledText(self.tab2, width=90, height=25)
         self.log_widget2.pack(pady=10)
+
+        # Выбор максимального числа итераций при нуле
+        self.max_retries_frame = tk.Frame(self.tab2)
+        self.max_retries_frame.pack(pady=5)
+        tk.Label(self.max_retries_frame, text="Сколько раз байтим нули:").pack(side=tk.LEFT)
+        self.max_retries_var = tk.IntVar(value=3)  # По умолчанию 3 попытки
+        tk.Spinbox(self.max_retries_frame, from_=1, to=10, width=5, textvariable=self.max_retries_var).pack(side=tk.LEFT, padx=5)
+
         tk.Button(self.tab2, text="АНАЛИЗ", command=self.start_analysis_thread).pack(pady=10)
 
         # Обновление логов
@@ -339,14 +347,22 @@ class App:
             self.log(self.log_widget2, "Файл для сохранения не выбран.")
         return file_path
 
-    def process_query(self, query, result_queue):
+    def process_query(self, query, result_queue, max_retries):
         if not isinstance(query, str) or not query.strip():
             result_queue.put([query, "Пустой запрос"])
             self.log(self.log_widget2, f"Пропуск пустого запроса: {query}")
             return
-        self.log(self.log_widget2, f"Обрабатываю: {query}")
-        html = fetch_search_page(query)
-        count = get_item_count(html) if html else "Ошибка позиций"
+
+        retries = 0
+        while retries <= max_retries:
+            self.log(self.log_widget2, f"Обрабатываю: {query} (попытка {retries + 1}/{max_retries + 1})")
+            html = fetch_search_page(query)
+            count = get_item_count(html) if html else "Ошибка позиций"
+            if count != "0" and count != "Ошибка позиций":  # Если не ноль и не ошибка, выходим
+                break
+            retries += 1
+            time.sleep(5)  # Пауза перед повторной попыткой
+
         result_queue.put([query, count])
         self.log(self.log_widget2, f"Результат: {query} — {count}")
 
@@ -370,9 +386,10 @@ class App:
         queries = df["Запросы"].tolist()
         result_queue = queue.Queue()
         threads = []
+        max_retries = self.max_retries_var.get()  # Получаем значение из Spinbox
 
         for query in queries:
-            thread = threading.Thread(target=self.process_query, args=(query, result_queue))
+            thread = threading.Thread(target=self.process_query, args=(query, result_queue, max_retries))
             threads.append(thread)
             thread.start()
 

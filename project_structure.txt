@@ -1,0 +1,161 @@
+Текущая структура файлов:
+text
+D:\VSCODE\1\
+├── app.py                # Точка входа для запуска приложения
+├── src\
+│   ├── interface.py      # Главный интерфейс с Tkinter (вкладки "Парсер карточек" и "Анализ запросов")
+│   ├── utils\
+│   │   ├── helpers.py    # Утилиты для парсинга карточек (fetch_page, parse_page, etc.)
+│   │   ├── search_helper.py  # Утилиты для анализа запросов (fetch_search_page, get_item_count)
+│ input.xlsx             # Входной файл с запросами (столбец "Запросы")
+│ search_log.txt         # Лог-файл для запросов (результаты fetch_search_page)
+│ parser.ico             # Иконка для интерфейса
+│ poems.txt              # Файл со стихами для "Парсера карточек"
+│ config.json            # Конфиг для парсинга карточек (теги, image_container)
+└── D:\VSCODE\1_files\WB\
+    ├── сверло4.xlsx      # Пример выходного файла (анализ запросов)
+    ├── дюбель2.xlsx      # Ещё один пример выходного файла
+    └── test.xlsx         # Тестовый выходной файл
+Подробное описание файлов:
+1. D:\VSCODE\1\app.py
+
+    Назначение: Точка входа для запуска приложения.
+    Содержимое: Импортирует класс App из interface.py и запускает Tkinter.
+    Код:
+    python
+
+    from src.interface import App
+    import tkinter as tk
+
+    if __name__ == "__main__":
+        root = tk.Tk()
+        app = App(root)
+        root.mainloop()
+    Комментарии:
+        Простой запускатель. Если мы будем добавлять что-то глобальное (настройки, логику старта), можно расширить здесь.
+        Запускается командой: python D:\VSCODE\1\app.py.
+
+2. D:\VSCODE\1\src\interface.py
+
+    Назначение: Главный интерфейс с двумя вкладками: "Парсер карточек" и "Анализ запросов".
+    Содержимое: Класс App с методами для Tkinter, парсинга карточек и анализа запросов.
+    Основные части:
+        __init__: Создаёт окно, вкладки, логи, Spinbox для "Сколько раз байтим нули".
+        log/update_logs: Реалтайм-логи через очередь.
+        load_file_parser/configure_tags/parse_url/start_parsing: Логика парсинга карточек (ID, URL, Base URL → Готовый парс.xlsx).
+        load_file_analysis/select_output_file/process_query/start_analysis: Логика анализа запросов (input.xlsx → .xlsx с результатами).
+    Особенности:
+        "Анализ запросов" байтит нули до max_retries (по умолчанию 3, от 1 до 10).
+        Выходной файл выбирается через asksaveasfilename.
+    Зависимости: helpers.py, search_helper.py, pandas, tkinter, threading, etc.
+
+3. D:\VSCODE\1\src\utils\helpers.py
+
+    Назначение: Утилиты для парсинга карточек (загрузка страниц, парсинг HTML, скачивание картинок).
+    Содержимое:
+        fetch_page(url): Загружает HTML страницы через Selenium или requests (зависит от реализации).
+        parse_page(html): Парсит HTML в BeautifulSoup.
+        extract_product_info(soup, config): Извлекает данные по тегам из config.json.
+        download_images(soup, identifier, base_url, output_folder, image_container): Скачивает картинки.
+    Комментарии:
+        Используется только во вкладке "Парсер карточек".
+        Точный код зависит от твоей реализации — предположительно, там Selenium + BeautifulSoup.
+
+4. D:\VSCODE\1\src\utils\search_helper.py
+
+    Назначение: Утилиты для анализа запросов (поиск на Wildberries, подсчёт позиций).
+    Содержимое:
+    python
+
+    from selenium import webdriver
+    from selenium.webdriver.chrome.options import Options
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.support import expected_conditions as EC
+    import time
+    from bs4 import BeautifulSoup
+
+    def fetch_search_page(query, log_file="search_log.txt", retries=3):
+        url = f"https://www.wildberries.ru/catalog/0/search.aspx?search={query}"
+        options = Options()
+        options.add_argument("--headless")
+        options.add_argument("--disable-gpu")
+        options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.6998.178 Safari/537.36")
+        
+        driver = None
+        attempt = 0
+        while attempt < retries:
+            try:
+                driver = webdriver.Chrome(options=options)
+                driver.set_page_load_timeout(60)
+                driver.get(url)
+                WebDriverWait(driver, 60).until(
+                    EC.presence_of_element_located((By.CLASS_NAME, "searching-results__count"))
+                )
+                html = driver.page_source
+                with open(log_file, "a", encoding="utf-8") as f:
+                    f.write(f"[{time.strftime('%H:%M:%S')}] Запрос: {query}\nURL: {driver.current_url}\nHTML:\n{html[:2000]}\n---\n")
+                return html
+            except Exception as e:
+                attempt += 1
+                with open(log_file, "a", encoding="utf-8") as f:
+                    f.write(f"[{time.strftime('%H:%M:%S')}] Ошибка для {query} (попытка {attempt}/{retries}): {e}\n")
+                if driver:
+                    driver.quit()
+                time.sleep(5)
+            finally:
+                if driver:
+                    driver.quit()
+        return None
+
+    def get_item_count(html):
+        if not html:
+            return "Ошибка позиций"
+        soup = BeautifulSoup(html, 'html.parser')
+        count_tag = soup.find("span", class_="searching-results__count")
+        return count_tag.text.strip() if count_tag else "0"
+    Комментарии:
+        Используется в "Анализ запросов".
+        fetch_search_page: 3 попытки, таймауты 60 сек, пишет в search_log.txt.
+        get_item_count: Ищет <span class="searching-results__count"> или возвращает "0"/"Ошибка позиций".
+
+5. D:\VSCODE\1\input.xlsx
+
+    Назначение: Входной файл для "Анализа запросов".
+    Структура: Столбец "Запросы" (например, "сверло по дереву", "дюбель гвоздь").
+    Комментарии: Обязательно должен быть в корне, иначе ошибка в load_file_analysis.
+
+6. D:\VSCODE\1\search_log.txt
+
+    Назначение: Лог-файл для fetch_search_page.
+    Содержимое: Запросы, URL, HTML (до 2000 символов), ошибки.
+    Пример: [13:31:43] Запрос: дюбель гвоздь....
+
+7. D:\VSCODE\1\parser.ico
+
+    Назначение: Иконка для окон Tkinter.
+    Комментарии: Используется в interface.py для красоты.
+
+8. D:\VSCODE\1\poems.txt
+
+    Назначение: Стихи для "Парсера карточек" (показываются каждые 500 позиций или в конце).
+    Формат: Заголовок|Стих\n....
+    Комментарии: Читается в load_poems.
+
+9. D:\VSCODE\1\config.json
+
+    Назначение: Конфиг для парсинга карточек (теги и контейнер картинок).
+    Пример:
+    json
+
+    {
+        "tags": [["h1", "itemprop=name", "name", "dd"], ["dt", "text=Штрихкод:", "barcode", "dd"]],
+        "image_container": "div, class_=item-slider-holder"
+    }
+    Комментарии: Создаётся в configure_tags.
+
+10. D:\VSCODE\1_files\WB\*.xlsx
+
+    Назначение: Выходные файлы анализа запросов.
+    Примеры: сверло4.xlsx, дюбель2.xlsx, test.xlsx.
+    Структура: Столбцы "Запрос", "Количество".
