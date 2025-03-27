@@ -17,7 +17,7 @@ def log_message(log_widget, message):
 
 def load_file():
     file_path = filedialog.askopenfilename(
-        title="Выберите файл содержащий Тег, Атрибут, Роль, Тег для поиска",
+        title="Выберите файл содержащий ID, url на позицию, базовый url",
         filetypes=(("Excel files", "*.xlsx"), ("All files", "*.*"))
     )
     if file_path:
@@ -68,7 +68,7 @@ def configure_tags():
     tk.Label(scrollable_frame, text="Контейнер картинок (тег, класс)").grid(row=31, column=0, columnspan=2, padx=5, pady=5)
     image_container_entry = tk.Entry(scrollable_frame, width=35)
     image_container_entry.grid(row=31, column=2, columnspan=2, padx=5, pady=5)
-    image_container_entry.insert(0, "div, class_=item-slider-holder")
+    image_container_entry.insert(0, "div, class_=catalog_detail detail element_1")
 
     def save_config():
         config = [(t.get(), a.get(), r.get(), s.get() or "dd") for t, a, r, s in tags if t.get() and r.get()]
@@ -80,7 +80,7 @@ def configure_tags():
 
     def load_config_from_file():
         file_path = filedialog.askopenfilename(
-            title="Выберите файл с настройками",
+            title="Выберите файл с Тегом, атрибутами, ролями и тегами для поиска",
             filetypes=(("Excel files", "*.xlsx"), ("All files", "*.*"))
         )
         if file_path:
@@ -116,7 +116,7 @@ def configure_tags():
             ("dt", "text=Штрихкод:", "barcode", "dd"),
             ("div", "id=tab1", "description", "dd")
         ],
-        "image_container": "div, class_=catalog_detail detail element_1"
+        "image_container": "div, class_=item-slider-holder"
     }
     if Path("config.json").exists():
         with open("config.json", "r") as f:

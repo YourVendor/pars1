@@ -91,6 +91,8 @@ def download_images(soup, identifier, base_url, output_folder, image_container):
     os.makedirs(output_folder, exist_ok=True)
     saved_images = []
     main_image_set = False
+    main_image_set1 = False
+    main_image_set2 = False
 
     for img in images:
         img_url = img.get('src')
@@ -113,14 +115,22 @@ def download_images(soup, identifier, base_url, output_folder, image_container):
                 filename = f"{identifier}.jpg"
                 main_image_set = True
             else:
-                filename = f"{identifier}a.jpg"
+                if not main_image_set1:
+                    filename = f"{identifier}a.jpg"
+                    main_image_set1 = True
+                else:
+                    if not main_image_set2:
+                        filename = f"{identifier}b.jpg"
+                        main_image_set2 = True
+                    else:
+                        filename = f"{identifier}c.jpg"
             
             file_path = os.path.join(output_folder, filename)
             with open(file_path, 'wb') as file:
                 file.write(response.content)
             saved_images.append(file_path)
 
-            if len(saved_images) == 2:
+            if len(saved_images) == 4:
                 break
 
         except Exception:
